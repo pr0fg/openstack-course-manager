@@ -1,0 +1,34 @@
+Subject: Added to Cloud Course: {course}
+
+Hello,
+
+You have been added to a new course on our private cloud:
+
+
+Course Details:
+---------------
+Course:       {course}
+Username:     {username}
+Password:     [See Registration Email]
+Project:      {project}
+
+Cloud URL:       {cloud_url}
+Course Manager:  {course_manager_url}
+
+Note: You can add/remove students from your course, reset passwords, share lab images, etc. using this panel. Please only email the cloud administrator if you are absolutely sure the functionality you require is not built into this web panel!
+
+
+Connecting to Your VMs:
+-----------------------
+VPN Type:           OpenVPN
+Credentials:        [Same As Above]
+Client Software:    https://openvpn.net/index.php/open-source/downloads.html
+OpenVPN File:       {vpn_url}
+Setup Guide:        {setup_guide}
+
+
+Note: Your account is always available 24/7.
+
+Please take a moment to read through the getting started guide located at {setup_guide}. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN. Your students will receive the same instructions.
+
+If you are having issues connecting to the cloud portal, or if you require additional technical assistance, please email your cloud administrator.
