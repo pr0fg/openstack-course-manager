@@ -19,18 +19,10 @@
 
   <!-- External CSS -->
   
-<!-- DataTables -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.css" integrity="sha512-Yy2EzOvLO8+Vs9hwepJPuaRWpwWZ/pamfO4lqi6t9gyQ9DhQ1k3cBRa+UERT/dPzIN/RHZAkraw6Azs4pI0jNg==" crossorigin="anonymous" />
 
 
   <!-- Custom CSS -->
   
-<style>
-    .error {
-      border: solid 2px #FF0000;  
-    }
-</style>
 
 
 </head>
@@ -45,7 +37,7 @@
       <li class="nav-item">
         <a class="nav-link" role="button">
           <i class="fas fa-chalkboard-teacher"></i>
-          <span id="courseCode" class="ml-2 float-right text-muted text-md">Logged in as:</span>
+          <span class="ml-2 float-right text-muted text-md">Current Course: <strong><span id="courseCode"></span></strong></span>
         </a>
       </li>
     </ul>
@@ -53,7 +45,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/login.html" role="button" onclick="logout()">
+        <a href="" class="nav-link" role="button" onclick="logout()">
           <span class="ml-2 float-right text-muted text-sm">Logout</span>
           <i class="fas fa-sign-out-alt"></i>
         </a>
@@ -68,9 +60,9 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
+    <div class="brand-link">
       <span class="brand-text font-weight-light"><i class="nav-icon fas fa-cloud mr-2 ml-3"></i>Course Manager</span>
-    </a>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -98,6 +90,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="images.html" class="nav-link ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                VM Images
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="vms.html" class="nav-link ">
               <i class="nav-icon far fa-clock"></i>
               <p>
@@ -110,14 +110,6 @@
               <i class="nav-icon fas fa-chart-pie"></i>
               <p>
                 Quota Restrictions
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="images.html" class="nav-link ">
-              <i class="nav-icon fas fa-cog"></i>
-              <p>
-                VM Images
               </p>
             </a>
           </li>
@@ -193,7 +185,8 @@
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Action</th>
+            <th>Reset Password</th>
+            <th>Remove</th>
           </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -205,7 +198,7 @@
 
     <div class="card card-info">
       <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-user-plus mr-2"></i>Add Instructor/TA</h3>
+        <h3 class="card-title"><i class="fas fa-user-plus mr-2"></i>Add Instructor</h3>
       </div>
       <div class="card-body">
 
@@ -249,8 +242,8 @@
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <!-- jQuery Cookie Plugin -->
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js" integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A==" crossorigin="anonymous"></script>
+<!-- jQuery UI -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
 <!-- Bootstrap 4 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
@@ -261,11 +254,6 @@
 
 <!-- External JS -->
 
-<!-- DataTables -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-responsive/2.2.5/dataTables.responsive.min.js" integrity="sha512-+lcEupw9bvzdp2Ey2GU0VfC7kvjySIYdCC4higXahhw8zUPKO1TUG8O3xf3QZV8rUwQjF5CgJR6V43r/JRhR3w==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.js" integrity="sha512-OiHNq9acGP68tNJIr1ctDsYv7c2kuEVo2XmB78fh4I+3Wi0gFtZl4lOi9XIGn1f1SHGcXGhn/3VHVXm7CYBFNQ==" crossorigin="anonymous"></script>
 
 
 <!-- Custom JS -->
@@ -276,29 +264,40 @@
 
     getInstructors()
 
-    $("#table").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-      "paging": true,
-    });
-
     $("#buttonAdd").click(function(){
 
-      $('#formId').removeClass('error')
-
-      var email = $("#formEmail").val().match(/^[a-z0-9\-\.]{3,}$/g)[0];
-
+      var email = $("#formEmail").val().match(/^[a-z0-9\-\.]{3,}$/g)[0]
       if(!email) {
-        $('#formEmail').addClass('error')
         toastr.error("Invalid email address!", "Error")
       }
       else {
-        addInstructor(email, email + '@ontariotechu.ca');
+        $('#formEmail').val('')
+        addInstructor(email, email + '@ontariotechu.ca')
       }
 
     });
 
   });
+
+  function resetPassword(id) {
+
+    $("#reset-" + id.replace(/\./g,'')).attr("disabled", true);
+
+    $.ajax({
+      url: "/api/users/" + id + "/reset",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully reset instructor password!", "Success")
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not reset instructor password.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#reset-" + id.replace(/\./g,'')).removeAttr("disabled");
+    })
+  }
 
   function getInstructors() {
 
@@ -312,7 +311,14 @@
       $("#tableBody").empty();
 
       for (var instructor in data) {
-        var html = `<tr><td>${instructor}</td><td>${data[instructor].email}</td><td><button id='${instructor.replace(/\./g,'')}' type='button' class='btn btn-block btn-danger' onClick='return removeInstructor("${instructor}");'>Remove</button></td></tr>`;
+        var html = `
+         <tr>
+          <td>${instructor}</td><td>${data[instructor].email}</td>
+          <td><button id='reset-${instructor.replace(/\./g,'')}' type='button' class='btn btn-block btn-warning' onClick='return resetPassword("${instructor}");'>Reset Password
+          </button></td>
+          <td><button id='remove-${instructor.replace(/\./g,'')}' type='button' class='btn btn-block btn-danger' onClick='return removeInstructor("${instructor}");'>Remove
+          </button></td>
+         </tr>`;
         $("#tableBody").append(html);
       }
     })
@@ -349,7 +355,7 @@
 
   function removeInstructor(id) {
 
-    $("#" + id.replace(/\./g,'')).attr("disabled", true);
+    $("#remove-" + id.replace(/\./g,'')).attr("disabled", true);
 
     $.ajax({
       url: "/api/instructors",
@@ -366,10 +372,10 @@
     })
     .fail(function(xhr, statusText) {
       toastr.error("Could not remove instructor " + id + " from course.", "Error (" + xhr.status + ")")
-      $("#" + id).removeAttr("disabled");
+      $("#remove-" + id.replace(/\./g,'')).removeAttr("disabled");
     })
     .always(function() {
-      $("#" + id).removeAttr("disabled");
+      $("#remove-" + id.replace(/\./g,'')).removeAttr("disabled");
     })
   }
 

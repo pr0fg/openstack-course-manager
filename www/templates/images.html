@@ -106,6 +106,7 @@
     })
     .fail(function(xhr, statusText) {
       toastr.error("Could not update image setting.", "Error (" + xhr.status + ")")
+      $("#" + id).removeAttr("disabled");
     });
   }
 

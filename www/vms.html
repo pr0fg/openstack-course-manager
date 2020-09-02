@@ -37,7 +37,7 @@
       <li class="nav-item">
         <a class="nav-link" role="button">
           <i class="fas fa-chalkboard-teacher"></i>
-          <span id="courseCode" class="ml-2 float-right text-muted text-md">Logged in as:</span>
+          <span class="ml-2 float-right text-muted text-md">Current Course: <strong><span id="courseCode"></span></strong></span>
         </a>
       </li>
     </ul>
@@ -45,7 +45,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/login.html" role="button" onclick="logout()">
+        <a href="" class="nav-link" role="button" onclick="logout()">
           <span class="ml-2 float-right text-muted text-sm">Logout</span>
           <i class="fas fa-sign-out-alt"></i>
         </a>
@@ -60,9 +60,9 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
+    <div class="brand-link">
       <span class="brand-text font-weight-light"><i class="nav-icon fas fa-cloud mr-2 ml-3"></i>Course Manager</span>
-    </a>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -90,6 +90,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="images.html" class="nav-link ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                VM Images
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="vms.html" class="nav-link active">
               <i class="nav-icon far fa-clock"></i>
               <p>
@@ -102,14 +110,6 @@
               <i class="nav-icon fas fa-chart-pie"></i>
               <p>
                 Quota Restrictions
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="images.html" class="nav-link ">
-              <i class="nav-icon fas fa-cog"></i>
-              <p>
-                VM Images
               </p>
             </a>
           </li>
@@ -178,11 +178,12 @@
 <div class="callout callout-danger">
   <h5>Predeploy Functionality</h5>
   <p>If VMs are not deleted between lecture/lab periods, student VMs will be placed back in their account before the next period. This will continue to happen until this functionality is disabled.</p>
+  <p><strong>Please only enable this setting if you absolutely need to!</strong> Usually it is adequate to have students redeploy their VMs each lab - this saves significant resources.</p>
 </div>
 
 <div class="card card-default">
   <div class="card-header">
-    <h3 class="card-title"><i class="fas fa-trash mr-2"></i>Retain VMs Between Classes/Labs:</h3>
+    <h3 class="card-title"><i class="fas fa-trash mr-2"></i>Retain Student VMs Between Classes/Labs:</h3>
   </div>
   <div class="card-body">
     <input id="vms" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
@@ -191,7 +192,7 @@
 
 <div class="callout callout-warning">
   <h5>Group Functionality</h5>
-  <p>Group VMs will never be deleted, only retained.</p>
+  <p>Note that group VMs will never be deleted, only retained.</p>
 </div>
 
 
@@ -208,8 +209,8 @@
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <!-- jQuery Cookie Plugin -->
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js" integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A==" crossorigin="anonymous"></script>
+<!-- jQuery UI -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
 <!-- Bootstrap 4 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>

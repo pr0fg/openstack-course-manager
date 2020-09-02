@@ -86,6 +86,40 @@ class OpenStackCourseManager():
 
         return wrapper_requires_student
 
+    def requires_instructor_or_student(func):
+
+        def wrapper_requires_instructor_or_student(self, *args, **kwargs):
+
+            course_code = str(args[0])
+            username = str(args[1])
+
+            user = self._get_user(username)
+            if not user or not user.is_enabled:
+                return False
+
+            project = self._get_project(
+                course_code,
+                f'{course_code}-{username}'
+            )
+
+            if not project:
+
+                for u in self._cloud.identity.role_assignments(
+                     scope_project_id=kwargs.get('course_project').id,
+                     role_id=Config.OS_USER_ROLE_ID):
+
+                    if u.user['id'] == user.id:
+                        project = kwargs.get('course_project')
+
+                if not project:
+                    logging.error(f'{course_code}: \
+                        {username} not in course')
+                    return False
+
+            return func(self, *args, **kwargs, user=user, project=project)
+
+        return wrapper_requires_instructor_or_student
+
     def requires_image_in_course(func):
 
         def wrapper_requires_image_in_course(self, *args, **kwargs):
@@ -159,7 +193,7 @@ class OpenStackCourseManager():
 
                 if 'Group' in p.name:
 
-                    group_name = '-'.join(p.name.split('-')[-2:])
+                    group_name = int(p.name.split('-')[-1:][0])
 
                     if details:
                         users['groups'][group_name] = []
@@ -444,7 +478,7 @@ class OpenStackCourseManager():
             return False
 
     @requires_course_code
-    @requires_student
+    @requires_instructor_or_student
     def set_password(self, course_code, username, password=None, **kwargs):
 
         plaintext_password = password if password else self._get_new_password()
@@ -560,7 +594,8 @@ class OpenStackCourseManager():
 
         return self._add_user_to_project(course_code, user,
                                          kwargs.get('course_project')
-                                         if instructor else project)
+                                         if instructor else project,
+                                         instructor=instructor)
 
     @requires_course_code
     @requires_student
@@ -631,7 +666,8 @@ class OpenStackCourseManager():
     # ------------------------------------------------------------------------
     # Internal Adders
 
-    def _add_user_to_project(self, course_code, user, project):
+    def _add_user_to_project(self, course_code, user, project,
+                             instructor=False):
 
         result = self._cloud.grant_role(
             Config.OS_USER_ROLE_ID,
@@ -646,7 +682,8 @@ class OpenStackCourseManager():
             return False
 
         if not user.id == self._admin_user.id:
-            self._send_course_enroll_email(course_code, user, project.name)
+            self._send_course_enroll_email(course_code, user, project.name,
+                                           instructor)
             logging.info(f'{course_code}: Added {user.name} to \
                     {project.name}')
 
@@ -1091,8 +1128,9 @@ class OpenStackCourseManager():
             project=project_name,
             cloud_url=Config.CLOUD_URL,
             course_manager_url=Config.COURSE_MANAGER_URL,
-            vpn_url=Config.VPN_FILE_URL,
-            setup_guide=Config.VPN_SETUP_GUIDE)
+            vpn_client_url=Config.VPN_CLIENT_URL,
+            vpn_file_url=Config.VPN_FILE_URL,
+            vpn_setup_guide=Config.VPN_SETUP_GUIDE)
 
         logging.info(f'{course_code}: Sending course enroll email to \
             {user.email}')

@@ -45,7 +45,7 @@
           <input id="course_code" type="text" class="form-control" placeholder="Course Code (e.g. INFR-1111)">
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-users"></span>
+              <span class="fas fa-chalkboard-teacher"></span>
             </div>
           </div>
         </div>
@@ -75,8 +75,8 @@
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <!-- jQuery Cookie Plugin -->
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js" integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A==" crossorigin="anonymous"></script>
+<!-- jQuery UI -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
 <!-- Bootstrap 4 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
@@ -108,11 +108,11 @@
       statusCode: {
         200: function(data) {
           var new_exp = new Date(new Date().getTime() + data.token.expires * 1000);
-          Cookies.set(data.token.name, data.token.value, { expires: new_exp })
+          Cookies.set(data.token.name, data.token.value, { expires: new_exp, path: '', sameSite: 'Strict' , secure: false })
           window.location.href = '/index.html'
         },
         401: function() {
-          toastr.error('Invalid username, password, or course code')
+          toastr.error('Invalid username, password, or course code', 'Error')
         }
       }
     })

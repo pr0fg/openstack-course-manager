@@ -24,8 +24,12 @@ logger = get_task_logger(__name__)
 def celery_wrapper(function_name, *args, **kwargs):
     logger.info(f'Received task name: {function_name}')
     method_to_call = getattr(manager, function_name)
-    return {'result': method_to_call(*args, **kwargs)}
+    result = method_to_call(*args, **kwargs)
+    return {'result': result}
 
+@celery.task
+def test():
+    return 'Test OK'
 
 # -----------------------------------------------------------------------------
 # Decorators
@@ -143,10 +147,8 @@ class PasswordReset(Resource):
 
     @requires_token
     def get(self, username, **kwargs):
-        celery_wrapper.delay('set_password',
-                             kwargs.get('course_code'),
-                             username)
-        return task_queued()
+        return parse_result(
+            manager.set_password(kwargs.get('course_code'), username))
 
 
 class Settings(Resource):
@@ -350,6 +352,8 @@ class Images(Resource):
         parser.add_argument('image', type=str, required=True)
         parser.add_argument('shared', type=bool, required=True)
         args = parser.parse_args()
+
+        test.delay()
 
         celery_wrapper.delay(
             'share_image' if args['shared'] else 'unshare_image',

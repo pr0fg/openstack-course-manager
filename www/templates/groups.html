@@ -4,17 +4,9 @@
 {% set page = 'groups' %}
 
 {% block externalcss %}
-<!-- DataTables -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.css" integrity="sha512-Yy2EzOvLO8+Vs9hwepJPuaRWpwWZ/pamfO4lqi6t9gyQ9DhQ1k3cBRa+UERT/dPzIN/RHZAkraw6Azs4pI0jNg==" crossorigin="anonymous" />
 {% endblock %}
 
 {% block customcss %}
-<style>
-    .error {
-      border: solid 2px #FF0000;  
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -159,11 +151,6 @@
 {% endblock %}
 
 {% block externaljs %}
-<!-- DataTables -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-responsive/2.2.5/dataTables.responsive.min.js" integrity="sha512-+lcEupw9bvzdp2Ey2GU0VfC7kvjySIYdCC4higXahhw8zUPKO1TUG8O3xf3QZV8rUwQjF5CgJR6V43r/JRhR3w==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.js" integrity="sha512-OiHNq9acGP68tNJIr1ctDsYv7c2kuEVo2XmB78fh4I+3Wi0gFtZl4lOi9XIGn1f1SHGcXGhn/3VHVXm7CYBFNQ==" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block customjs %}
@@ -174,30 +161,21 @@
     getGroups();
     setTimeout(getGroups, 10000)
 
-    $("#table").DataTable({
-      "responsive": true,
-      "autoWidth": false,
-      "paging": true,
-    });
-    
     $("#buttonAdd").click(function(){
-
-      $('#formStudentId').removeClass('error')
-      $('#formGroupId').removeClass('error')
 
       var sid = parseInt($("#formStudentId").val());
       var gid = parseInt($("#formGroupId").val());
 
-      if(!sid || sid < 100400000 || sid > 100999999) {
-        $('#formStudentId').addClass('error')
+      if(!sid || sid < 100000000 || sid > 100999999) {
         toastr.error("Invalid student ID!", "Error")
       }
       else if(!gid || gid < 1 || gid > 50) {
-        $('#formGroupId').addClass('error')
         toastr.error("Invalid group number!", "Error")
       }
       else {
-        addToGroup(sid, gid);
+        $("#formStudentId").val('')
+        $("#formGroupId").val('')
+        addToGroup(sid, gid)
       }
     });
 
@@ -216,8 +194,6 @@
       }
 
       else {
-
-        $("#buttonUpload").removeAttr("disabled");
         $("#filename").text(file.name);
         var reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
@@ -236,7 +212,7 @@
       
       entries = line.split(',')
 
-      if(entries.length >= 3) {
+      if(entries.length >= 3 && entries[0] == 'Group') {
         
         group_id = parseInt(entries[1])
         entries.shift()
@@ -278,8 +254,13 @@
 
       for (var group in data) {
         for (var student in data[group]) {
-          console.log(student)
-          var html = `<tr><td>${data[group][student].name}</td><td>${data[group][student].email}</td><td>${group.split('-')[1]}</td><td><button id='${data[group][student].name}-${group.split('-')[1]}' type='button' class='btn btn-block btn-danger' onClick='return removeFromGroup("${data[group][student].name}", ${group.split('-')[1]});'>Remove</button></td></tr>`;
+          var html = `
+           <tr>
+            <td>${data[group][student].name}</td>
+            <td>${data[group][student].email}</td>
+            <td>${group}</td>
+            <td><button id='${data[group][student].name}-${group.split('-')[1]}' type='button' class='btn btn-block btn-danger' onClick='return removeFromGroup("${data[group][student].name}", ${group.split('-')[1]});'>Remove</button></td>
+           </tr>`;
           $("#tableBody").append(html);
         }
       }

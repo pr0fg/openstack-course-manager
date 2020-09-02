@@ -19,13 +19,13 @@ Connecting to Your VMs:
 -----------------------
 VPN Type:           OpenVPN
 Credentials:        [Same As Above]
-Client Software:    https://openvpn.net/index.php/open-source/downloads.html
-OpenVPN File:       {vpn_url}
-Setup Guide:        {setup_guide}
+Client Software:    {vpn_client_url}
+OpenVPN File:       {vpn_file_url}
+Setup Guide:        {vpn_setup_guide}
 
 
-Note: You cannot log into the cloud web portal until your account has been enabled by your instructor!
+Note: You cannot log into the cloud web portal until your account has been enabled by your instructor! Cloud access is only available during course hours and on weekends (if enabled by your instructor).
 
-Please take a moment to read through the getting started guide located at {setup_guide}. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN.
+Please take a moment to read through the getting started guide located at {vpn_setup_guide}. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN.
 
 If you are having issues connecting to the cloud portal, or if you require additional technical assistance, please contact your instructor or TA.

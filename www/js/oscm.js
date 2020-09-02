@@ -8,7 +8,6 @@ function check_cookie() {
 
   $.ajax({
     type: 'GET',
-    withCredentials: true,
     url: '/api/token',
     statusCode: {
       401: function() {
@@ -22,13 +21,22 @@ function check_cookie() {
         }
       }
     }
-  }).done(function(data) {
+  })
+  .done(function(data) {
     course = data.course
-    $("#courseCode").html("Logged in as: " + course)
+    $("#courseCode").html(course)
   })
 }
 
 function logout() {
-  Cookies.remove('oscm', { path: '/' })
-  window.location.href = '/login.html'
+
+  $.ajax({
+    type: 'GET',
+    url: '/api/logout',
+  })
+  .always(function(data) {
+    Cookies.remove('oscm', { path: '/' })
+    window.location.href = '/login.html'
+  })
+
 }

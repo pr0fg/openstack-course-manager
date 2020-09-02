@@ -46,8 +46,9 @@ class Config(object):
     EMAIL_SENDER = os.getenv('EMAIL_SENDER')
 
     # Links for Automated Emails
-    CLOUD_URL = os.getenv('EMAIL_SERVER')
-    COURSE_MANAGER_URL = os.getenv('EMAIL_SERVER')
+    CLOUD_URL = os.getenv('CLOUD_URL')
+    COURSE_MANAGER_URL = os.getenv('COURSE_MANAGER_URL')
+    VPN_CLIENT_URL = os.getenv('VPN_CLIENT_URL')
     VPN_FILE_URL = os.getenv('VPN_FILE_URL')
     VPN_SETUP_GUIDE = os.getenv('VPN_SETUP_GUIDE')
 
@@ -68,7 +69,7 @@ class Config(object):
                 'instances': 5,
                 'cores': 5,
                 'ram': 10240,
-                'networks': 5
+                'networks': 10
             }
         }
     }

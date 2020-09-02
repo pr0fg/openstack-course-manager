@@ -36,7 +36,7 @@
           <input id="course_code" type="text" class="form-control" placeholder="Course Code (e.g. INFR-1111)">
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-users"></span>
+              <span class="fas fa-chalkboard-teacher"></span>
             </div>
           </div>
         </div>
@@ -89,11 +89,11 @@
       statusCode: {
         200: function(data) {
           var new_exp = new Date(new Date().getTime() + data.token.expires * 1000);
-          Cookies.set(data.token.name, data.token.value, { expires: new_exp })
+          Cookies.set(data.token.name, data.token.value, { expires: new_exp, path: '', sameSite: 'Strict' , secure: false })
           window.location.href = '/index.html'
         },
         401: function() {
-          toastr.error('Invalid username, password, or course code')
+          toastr.error('Invalid username, password, or course code', 'Error')
         }
       }
     })

@@ -39,7 +39,7 @@
       <li class="nav-item">
         <a class="nav-link" role="button">
           <i class="fas fa-chalkboard-teacher"></i>
-          <span id="courseCode" class="ml-2 float-right text-muted text-md">Logged in as:</span>
+          <span class="ml-2 float-right text-muted text-md">Current Course: <strong><span id="courseCode"></span></strong></span>
         </a>
       </li>
     </ul>
@@ -47,7 +47,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/login.html" role="button" onclick="logout()">
+        <a href="" class="nav-link" role="button" onclick="logout()">
           <span class="ml-2 float-right text-muted text-sm">Logout</span>
           <i class="fas fa-sign-out-alt"></i>
         </a>
@@ -62,9 +62,9 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <!-- Brand Logo -->
-    <a href="index.html" class="brand-link">
+    <div class="brand-link">
       <span class="brand-text font-weight-light"><i class="nav-icon fas fa-cloud mr-2 ml-3"></i>Course Manager</span>
-    </a>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -92,6 +92,14 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="images.html" class="nav-link ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                VM Images
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="vms.html" class="nav-link ">
               <i class="nav-icon far fa-clock"></i>
               <p>
@@ -104,14 +112,6 @@
               <i class="nav-icon fas fa-chart-pie"></i>
               <p>
                 Quota Restrictions
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="images.html" class="nav-link ">
-              <i class="nav-icon fas fa-cog"></i>
-              <p>
-                VM Images
               </p>
             </a>
           </li>
@@ -288,8 +288,8 @@
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <!-- jQuery Cookie Plugin -->
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js" integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A==" crossorigin="anonymous"></script>
+<!-- jQuery UI -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
 <!-- Bootstrap 4 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
@@ -327,14 +327,12 @@
     $('#datetimepickerStart').datetimepicker({
         format: 'LT',
         stepping: 10,
-        useCurrent: false,
-        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 22, 23]
+        useCurrent: false
     });
     $('#datetimepickerEnd').datetimepicker({
         format: 'LT',
         stepping: 10,
         useCurrent: false,
-        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 9, 23]
     });
 
     $("#buttonAdd").click(function(){
@@ -345,13 +343,19 @@
       var duration = moment(endTime).diff(startTime);
       var durationHours = moment.duration(duration).as('hours');
 
-      if( startTime.isValid() && endTime.isValid() && durationHours >= 0.5) {
-        addToSchedule(
-          parseInt(day),
-          parseInt(startTime.format("HH")),
-          parseInt(startTime.format("mm")),
-          parseInt(endTime.format("HH")),
-          parseInt(endTime.format("mm")))
+      if( startTime.isValid() && endTime.isValid() ) {
+
+        if ( durationHours < 1 || durationHours > 3) {
+          toastr.error("Courses must be between 1 and 3 hours in duration.", "Error");
+        }
+        else {
+          addToSchedule(
+            parseInt(day),
+            parseInt(startTime.format("HH")),
+            parseInt(startTime.format("mm")),
+            parseInt(endTime.format("HH")),
+            parseInt(endTime.format("mm")))
+        }
       }
       else {
         toastr.error("Please enter a valid time.", "Error");
