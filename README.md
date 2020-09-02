@@ -17,7 +17,7 @@ You must load all relevant environmental variables prior to using this software 
 
 ### Running the API Server
 
-Add/edit any settings in `.env` and `.flaskenv` (i.e. FLASK_DEBUG, FLASK_RUN_HOST, FLASK_RUN_PORT), then do:
+Add/edit any settings in `.env` and `.flaskenv` (i.e. `FLASK_DEBUG`, `FLASK_RUN_HOST`, and `FLASK_RUN_PORT`), then do:
 
 ```
 flask run
@@ -41,7 +41,7 @@ You should probably register this as a system service...
 
 This web panel is designed to integrate with the OpenStack Course Manager's API system. All paths are relative, so you should be able to use this on any domain as long as the API endpoint is on the same domain under `/api`.
 
-You can generate static assets by modifying the Jinja2 templates under `www/templates`. Then, simply run `staticjinja build` to build out the new assets.
+You can generate static assets by modifying the Jinja2 templates under `www/templates`. Then simply run `staticjinja build` to generate the new assets.
 
 
 ## Debug Mode
