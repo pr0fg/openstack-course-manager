@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course Manager | Course Schedule</title>
+  
+  <!-- Base CSS -->
+    <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.1.2/collection/components/icon/icon.min.css" integrity="sha512-DR9Jj0uFIfe7v1QLrvPRusRxqdSnVSVRyRBt1H8gcRQgxMKEwsOMSNYs0hyIpo8AITFyCMDC2Q1fCg1XcgdYig==" crossorigin="anonymous" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ==" crossorigin="anonymous" />
+
+  <!-- External CSS -->
+  
+<!-- Tempus Dominus -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+
+
+  <!-- Custom CSS -->
+  
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" role="button">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span id="courseCode" class="ml-2 float-right text-muted text-md">Logged in as:</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/login.html" role="button" onclick="logout()">
+          <span class="ml-2 float-right text-muted text-sm">Logout</span>
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </li>
+    </ul>
+
+  </nav>
+  <!-- /.navbar -->
+
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+    <!-- Brand Logo -->
+    <a href="index.html" class="brand-link">
+      <span class="brand-text font-weight-light"><i class="nav-icon fas fa-cloud mr-2 ml-3"></i>Course Manager</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="index.html" class="nav-link ">
+              <i class="nav-icon fas fa-home"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-header">COURSE SETTINGS</li>
+          <li class="nav-item">
+            <a href="schedule.html" class="nav-link active">
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>
+                Schedule
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="vms.html" class="nav-link ">
+              <i class="nav-icon far fa-clock"></i>
+              <p>
+                VM Retention
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="quotas.html" class="nav-link ">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Quota Restrictions
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="images.html" class="nav-link ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                VM Images
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-header">USER MANAGEMENT</li>
+          <li class="nav-item">
+            <a href="instructors.html" class="nav-link ">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Instructors
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="students.html" class="nav-link ">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Students
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="groups.html" class="nav-link ">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Groups
+              </p>
+            </a>
+          </li>
+          
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Course Schedule</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item active">Home</li>
+              <li class="breadcrumb-item active">Course Schedule</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+      
+<div class="row">
+  <div class="col-12">
+
+    <div class="callout callout-warning">
+      <h5>Buffer Time</h5>
+      <p>Please note that cloud access will begin and end <b>10 minutes</b> before and after the scheduled time slot.</p>
+    </div>
+
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-clock mr-2"></i>Weekend Access to Cloud & Course Images</h3>
+      </div>
+      <div class="card-body">
+        <input id="weekend" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+      </div>
+    </div>
+    <!-- /.card -->
+
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-calendar-plus mr-2"></i>Add Section</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Day</span>
+                </div>
+                <select class="form-control" id="formSectionDay">
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3">Thursday</option>
+                  <option value="4">Friday</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Start</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerStart"/>
+                <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">End</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerEnd"/>
+                <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-1">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary"><i class="fa fa-plus"></i></button>
+            </div>
+
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+</div>
+<!-- /.row -->
+
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+</div>
+<!-- ./wrapper -->
+
+<!-- Base JS -->
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<!-- jQuery Cookie Plugin -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
+<!-- Bootstrap 4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
+<!-- Toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous"></script>
+<!-- OSCM -->
+<script src="js/oscm.js"></script>
+
+<!-- External JS -->
+
+<!-- Tempus Dominus -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
+<!-- Bootstrap Switch -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" integrity="sha512-J+763o/bd3r9iW+gFEqTaeyi+uAphmzkE/zU8FxY6iAvD3nQKXa+ZAWkBI9QS9QkYEKddQoiy0I5GDxKf/ORBA==" crossorigin="anonymous"></script>
+
+
+<!-- Custom JS -->
+
+<script>
+
+  $(function () {
+
+    $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch({disabled: true});
+    });
+
+    $("#weekend").on('switchChange.bootstrapSwitch', function(event, state) {
+       updateSetting({'weekend': state});
+    });
+
+    getSettings();
+    getSchedule();
+
+    $('#datetimepickerStart').datetimepicker({
+        format: 'LT',
+        stepping: 10,
+        useCurrent: false,
+        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 22, 23]
+    });
+    $('#datetimepickerEnd').datetimepicker({
+        format: 'LT',
+        stepping: 10,
+        useCurrent: false,
+        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 9, 23]
+    });
+
+    $("#buttonAdd").click(function(){
+
+      var day = $("#formSectionDay").val()
+      var startTime = $('#datetimepickerStart').datetimepicker('viewDate');
+      var endTime = $('#datetimepickerEnd').datetimepicker('viewDate');
+      var duration = moment(endTime).diff(startTime);
+      var durationHours = moment.duration(duration).as('hours');
+
+      if( startTime.isValid() && endTime.isValid() && durationHours >= 0.5) {
+        addToSchedule(
+          parseInt(day),
+          parseInt(startTime.format("HH")),
+          parseInt(startTime.format("mm")),
+          parseInt(endTime.format("HH")),
+          parseInt(endTime.format("mm")))
+      }
+      else {
+        toastr.error("Please enter a valid time.", "Error");
+      }
+    });
+
+    $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    });
+
+  });
+
+  function getSchedule() {
+
+    $.ajax({
+      url: "/api/schedule",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+
+      $("#tableBody").empty();
+
+      dow = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+      test = data
+      for (const [day, items] of Object.entries(test)) {
+
+        for(const [, item] of Object.entries(items)) {
+
+          time = item.split(':')
+          id = `${day}${time[0]}${time[1]}${time[2]}${time[3]}`
+          if(time[1].length ==1) { time[1] = '00'}
+          if(time[3].length ==1) { time[3] = '00'}
+
+          var html = `<tr><td>${dow[day]}</td><td>${time[0]}:${time[1]}</td><td>${time[2]}:${time[3]}</td><td><button id='${id}' type='button' class='btn btn-block btn-danger btn-sm' onClick='return removeFromSchedule("${id}", ${day}, ${time[0]}, ${time[1]}, ${time[2]}, ${time[3]} );'>Remove</button></td></tr>`
+
+          $("#tableBody").append(html);
+        }
+      }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve schedule.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function addToSchedule(day, start_hour, start_minute, end_hour, end_minute) {
+
+    $("#buttonAdd").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/schedule",
+      method: "POST",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        day: day,
+        start_hour: start_hour,
+        start_minute: start_minute,
+        end_hour: end_hour,
+        end_minute: end_minute
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully added new section!", "Success")
+      getSchedule();
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not add section to schedule.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonAdd").removeAttr("disabled");
+    })
+  }
+
+  function removeFromSchedule(id, day, start_hour, start_minute, end_hour, end_minute) {
+
+    $("#" + id).attr("disabled", true);
+
+    $.ajax({
+      url: "/api/schedule",
+      method: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        day: day,
+        start_hour: start_hour,
+        start_minute: start_minute,
+        end_hour: end_hour,
+        end_minute: end_minute
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully removed section!", "Success")
+      getSchedule();
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not remove section from schedule.", "Error (" + xhr.status + ")")
+    })
+  }
+
+  function getSettings() {
+      $.ajax({
+        url: "/api/settings",
+        method: "GET",
+        statusCode: { 401: function() { logout() } }
+      })
+      .done(function(data, statusText, xhr) {
+        $("#weekend").bootstrapSwitch('disabled', false);
+        $("#weekend").bootstrapSwitch('state', data.weekend, true)
+      })
+      .fail(function(xhr, statusText) {
+        toastr.error("Could not retrieve course settings.", "Error (" + xhr.status + ")")
+      })
+  }
+
+  function updateSetting(data) {
+
+    $("#weekend").bootstrapSwitch('disabled', true);
+
+    $.ajax({
+      url: "/api/settings",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(data),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated option!", "Success")
+      getSettings()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update option.", "Error (" + xhr.status + ")")
+    });
+  }
+
+</script>
+
+
+</body>
+</html>

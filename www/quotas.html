@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course Manager | Quota Restrictions</title>
+  
+  <!-- Base CSS -->
+    <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.1.2/collection/components/icon/icon.min.css" integrity="sha512-DR9Jj0uFIfe7v1QLrvPRusRxqdSnVSVRyRBt1H8gcRQgxMKEwsOMSNYs0hyIpo8AITFyCMDC2Q1fCg1XcgdYig==" crossorigin="anonymous" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ==" crossorigin="anonymous" />
+
+  <!-- External CSS -->
+  
+
+
+  <!-- Custom CSS -->
+  
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" role="button">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span id="courseCode" class="ml-2 float-right text-muted text-md">Logged in as:</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/login.html" role="button" onclick="logout()">
+          <span class="ml-2 float-right text-muted text-sm">Logout</span>
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </li>
+    </ul>
+
+  </nav>
+  <!-- /.navbar -->
+
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+    <!-- Brand Logo -->
+    <a href="index.html" class="brand-link">
+      <span class="brand-text font-weight-light"><i class="nav-icon fas fa-cloud mr-2 ml-3"></i>Course Manager</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="index.html" class="nav-link ">
+              <i class="nav-icon fas fa-home"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-header">COURSE SETTINGS</li>
+          <li class="nav-item">
+            <a href="schedule.html" class="nav-link ">
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>
+                Schedule
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="vms.html" class="nav-link ">
+              <i class="nav-icon far fa-clock"></i>
+              <p>
+                VM Retention
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="quotas.html" class="nav-link active">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Quota Restrictions
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="images.html" class="nav-link ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                VM Images
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-header">USER MANAGEMENT</li>
+          <li class="nav-item">
+            <a href="instructors.html" class="nav-link ">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Instructors
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="students.html" class="nav-link ">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Students
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="groups.html" class="nav-link ">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Groups
+              </p>
+            </a>
+          </li>
+          
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Quota Restrictions</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item active">Home</li>
+              <li class="breadcrumb-item active">Quota Restrictions</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+      
+<div class="callout callout-danger">
+  <h5>Quotas Are Important!</h5>
+  <p>Quotas help us prevent students from deploying too many resources. If a suitable quota is not set, students may deploy too many resources. This could result in poor VM performance. We recommend you set the minimum number of resources reasonably needed for your course.</p>
+</div>
+
+<div class="row">
+
+  <!-- left column -->
+  <div class="col-md-6">
+    <div class="card card-success">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user mr-2"></i>Per Student</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="form-group">
+          <label>Maximum Number of VMs</label>
+          <select id="studentQuotaVMCount" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Cores Per VM</label>
+          <select id="studentQuotaCores" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>RAM Per VM</label>
+          <select id="studentQuotaRAM" class="form-control">
+            <option value='1024'>1 GB</option>
+            <option value='2048'>2 GB</option>
+            <option value='4096'>4 GB</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="studentQuotaAllowNetworks">
+            <label class="custom-control-label" for="studentQuotaAllowNetworks">Allow Students to Make Custom Networks</label>
+          </div>
+        </div>
+
+        <button type="button" id="buttonStudentQuotaSave" class="btn btn-success">Save</button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- right column -->
+  <div class="col-md-6">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-users mr-2"></i>Per Group (If Applicable)</h3>
+      </div>
+
+      <div class="card-body">  
+
+        <div class="form-group">
+          <label>Maximum Number of VMs</label>
+          <select id="groupQuotaVMCount" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Cores Per VM</label>
+          <select id="groupQuotaCores" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>RAM Per VM</label>
+          <select id="groupQuotaRAM" class="form-control">
+            <option value='1024'>1 GB</option>
+            <option value='2048'>2 GB</option>
+            <option value='4096'>4 GB</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="groupQuotaAllowNetworks">
+            <label class="custom-control-label" for="groupQuotaAllowNetworks">Allow Groups to Make Custom Networks</label>
+          </div>
+        </div>
+
+        <button type="button" id="buttonGroupQuotaSave" class="btn btn-primary">Save</button>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+</div>
+<!-- ./wrapper -->
+
+<!-- Base JS -->
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<!-- jQuery Cookie Plugin -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
+<!-- Bootstrap 4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
+<!-- Toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous"></script>
+<!-- OSCM -->
+<script src="js/oscm.js"></script>
+
+<!-- External JS -->
+
+
+
+<!-- Custom JS -->
+
+<script>
+
+  $(function () {
+
+    $("#buttonStudentQuotaSave").click(function(){
+      var vms = parseInt($("#studentQuotaVMCount").val());
+      var cores = parseInt($("#studentQuotaCores").val()) * vms;
+      var ram = parseInt($("#studentQuotaRAM").val()) * vms;
+      var networks = $("#studentQuotaAllowNetworks").is(":checked");
+      if(networks === true) { networks = 10} else { networks = 0 }
+      updateStudentQuota(vms, cores, ram, networks);
+    });
+
+    $("#buttonGroupQuotaSave").click(function(){
+      var vms = parseInt($("#groupQuotaVMCount").val());
+      var cores = parseInt($("#groupQuotaCores").val()) * vms;
+      var ram = parseInt($("#groupQuotaRAM").val()) * vms;
+      var networks = $("#groupQuotaAllowNetworks").is(":checked");
+      if(networks === true) { networks = 10} else { networks = 0 }
+      updateGroupQuota(vms, cores, ram, networks);
+    });
+
+    getQuotas()
+
+  });
+
+  function getQuotas() {
+
+    $.ajax({
+      url: "/api/quota",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+        console.log(data)
+
+        $("#studentQuotaVMCount").val(data.students.instances)
+        $("#studentQuotaCores").val(data.students.cores / data.students.instances)
+        $("#studentQuotaRAM").val(parseInt(data.students.ram) / parseInt(data.students.instances))
+
+        if(parseInt(data.students.networks)> 0) {
+          $("#studentQuotaAllowNetworks").prop('checked', true);
+        } 
+        else { 
+          $("#studentQuotaAllowNetworks").prop('checked', false);
+        }
+
+        $("#groupQuotaVMCount").val(data.groups.instances)
+        $("#groupQuotaCores").val(data.groups.cores / data.groups.instances)
+        $("#groupQuotaRAM").val(parseInt(data.groups.ram) / parseInt(data.groups.instances))
+
+        if(parseInt(data.groups.networks)> 0) {
+          $("#groupQuotaAllowNetworks").prop('checked', true);
+        } 
+        else { 
+          $("#groupQuotaAllowNetworks").prop('checked', false);
+        }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve quota settings.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function updateStudentQuota(vms, cores, ram, networks) {
+
+    $("#buttonStudentQuotaSave").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/quota",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        students: {
+          instances: vms,
+          cores: cores,
+          ram: ram,
+          networks: networks
+        }
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated student quota!", "Success")
+      getQuotas()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update student quota.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonStudentQuotaSave").removeAttr("disabled");
+    })
+  }
+
+  function updateGroupQuota(vms, cores, ram, networks) {
+
+    $("#buttonGroupQuotaSave").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/quota",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        groups: {
+          instances: vms,
+          cores: cores,
+          ram: ram,
+          networks: networks
+        }
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated group quota!", "Success")
+      getQuotas()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update group quota.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonGroupQuotaSave").removeAttr("disabled");
+    })
+  }
+
+</script>
+
+
+</body>
+</html>

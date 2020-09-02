@@ -1,0 +1,187 @@
+{% extends "_base.html" %}
+
+{% set title = 'Manage Instructors' %}
+{% set page = 'instructors' %}
+
+{% block externalcss %}
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.css" integrity="sha512-Yy2EzOvLO8+Vs9hwepJPuaRWpwWZ/pamfO4lqi6t9gyQ9DhQ1k3cBRa+UERT/dPzIN/RHZAkraw6Azs4pI0jNg==" crossorigin="anonymous" />
+{% endblock %}
+
+{% block customcss %}
+<style>
+    .error {
+      border: solid 2px #FF0000;  
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card">
+      <div class="card-body">
+        <table id="table" class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-plus mr-2"></i>Add Instructor/TA</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-6">
+              <div class="input-group mb-3">
+                <input type="text" id="formEmail" class="form-control" placeholder="Email">
+                <div class="input-group-append">
+                  <span class="input-group-text">@ontariotechu.ca</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary">Add</button>
+            </div>
+
+        </div>
+
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+{% endblock %}
+
+{% block externaljs %}
+<!-- DataTables -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-responsive/2.2.5/dataTables.responsive.min.js" integrity="sha512-+lcEupw9bvzdp2Ey2GU0VfC7kvjySIYdCC4higXahhw8zUPKO1TUG8O3xf3QZV8rUwQjF5CgJR6V43r/JRhR3w==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.js" integrity="sha512-OiHNq9acGP68tNJIr1ctDsYv7c2kuEVo2XmB78fh4I+3Wi0gFtZl4lOi9XIGn1f1SHGcXGhn/3VHVXm7CYBFNQ==" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    getInstructors()
+
+    $("#table").DataTable({
+      "responsive": true,
+      "autoWidth": false,
+      "paging": true,
+    });
+
+    $("#buttonAdd").click(function(){
+
+      $('#formId').removeClass('error')
+
+      var email = $("#formEmail").val().match(/^[a-z0-9\-\.]{3,}$/g)[0];
+
+      if(!email) {
+        $('#formEmail').addClass('error')
+        toastr.error("Invalid email address!", "Error")
+      }
+      else {
+        addInstructor(email, email + '@ontariotechu.ca');
+      }
+
+    });
+
+  });
+
+  function getInstructors() {
+
+    $.ajax({
+      url: "/api/instructors",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      
+      $("#tableBody").empty();
+
+      for (var instructor in data) {
+        var html = `<tr><td>${instructor}</td><td>${data[instructor].email}</td><td><button id='${instructor.replace(/\./g,'')}' type='button' class='btn btn-block btn-danger' onClick='return removeInstructor("${instructor}");'>Remove</button></td></tr>`;
+        $("#tableBody").append(html);
+      }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve instructor list.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function addInstructor(id, email) {
+
+    $("#buttonAdd").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/instructors",
+      method: "POST",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        username: id,
+        email: email
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully added instructor to course!", "Success")
+      getInstructors()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not add instructor to course.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonAdd").removeAttr("disabled");
+    })
+  }
+
+  function removeInstructor(id) {
+
+    $("#" + id.replace(/\./g,'')).attr("disabled", true);
+
+    $.ajax({
+      url: "/api/instructors",
+      method: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({  
+        username: id
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully removed instructor from course!", "Success")
+      getInstructors()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not remove instructor " + id + " from course.", "Error (" + xhr.status + ")")
+      $("#" + id).removeAttr("disabled");
+    })
+    .always(function() {
+      $("#" + id).removeAttr("disabled");
+    })
+  }
+
+</script>
+{% endblock %}

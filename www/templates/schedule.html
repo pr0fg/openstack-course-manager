@@ -1,0 +1,301 @@
+{% extends "_base.html" %}
+
+{% set title = 'Course Schedule' %}
+{% set page = 'schedule' %}
+
+{% block externalcss %}
+<!-- Tempus Dominus -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha512-PMjWzHVtwxdq7m7GIxBot5vdxUY+5aKP9wpKtvnNBZrVv1srI8tU6xvFMzG8crLNcMj/8Xl/WWmo/oAP/40p1g==" crossorigin="anonymous" />
+{% endblock %}
+
+{% block customcss %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="callout callout-warning">
+      <h5>Buffer Time</h5>
+      <p>Please note that cloud access will begin and end <b>10 minutes</b> before and after the scheduled time slot.</p>
+    </div>
+
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-clock mr-2"></i>Weekend Access to Cloud & Course Images</h3>
+      </div>
+      <div class="card-body">
+        <input id="weekend" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+      </div>
+    </div>
+    <!-- /.card -->
+
+    <div class="card">
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-calendar-plus mr-2"></i>Add Section</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Day</span>
+                </div>
+                <select class="form-control" id="formSectionDay">
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3">Thursday</option>
+                  <option value="4">Friday</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Start</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerStart"/>
+                <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">End</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerEnd"/>
+                <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-1">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary"><i class="fa fa-plus"></i></button>
+            </div>
+
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+</div>
+<!-- /.row -->
+{% endblock %}
+
+{% block externaljs %}
+<!-- Tempus Dominus -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha512-2JBCbWoMJPH+Uj7Wq5OLub8E5edWHlTM4ar/YJkZh3plwB2INhhOC3eDoqHm1Za/ZOSksrLlURLoyXVdfQXqwg==" crossorigin="anonymous"></script>
+<!-- Bootstrap Switch -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" integrity="sha512-J+763o/bd3r9iW+gFEqTaeyi+uAphmzkE/zU8FxY6iAvD3nQKXa+ZAWkBI9QS9QkYEKddQoiy0I5GDxKf/ORBA==" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch({disabled: true});
+    });
+
+    $("#weekend").on('switchChange.bootstrapSwitch', function(event, state) {
+       updateSetting({'weekend': state});
+    });
+
+    getSettings();
+    getSchedule();
+
+    $('#datetimepickerStart').datetimepicker({
+        format: 'LT',
+        stepping: 10,
+        useCurrent: false,
+        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 22, 23]
+    });
+    $('#datetimepickerEnd').datetimepicker({
+        format: 'LT',
+        stepping: 10,
+        useCurrent: false,
+        disabledHours: [0, 1, 2, 3, 4, 5, 6, 7, 9, 23]
+    });
+
+    $("#buttonAdd").click(function(){
+
+      var day = $("#formSectionDay").val()
+      var startTime = $('#datetimepickerStart').datetimepicker('viewDate');
+      var endTime = $('#datetimepickerEnd').datetimepicker('viewDate');
+      var duration = moment(endTime).diff(startTime);
+      var durationHours = moment.duration(duration).as('hours');
+
+      if( startTime.isValid() && endTime.isValid() && durationHours >= 0.5) {
+        addToSchedule(
+          parseInt(day),
+          parseInt(startTime.format("HH")),
+          parseInt(startTime.format("mm")),
+          parseInt(endTime.format("HH")),
+          parseInt(endTime.format("mm")))
+      }
+      else {
+        toastr.error("Please enter a valid time.", "Error");
+      }
+    });
+
+    $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    });
+
+  });
+
+  function getSchedule() {
+
+    $.ajax({
+      url: "/api/schedule",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+
+      $("#tableBody").empty();
+
+      dow = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+      test = data
+      for (const [day, items] of Object.entries(test)) {
+
+        for(const [, item] of Object.entries(items)) {
+
+          time = item.split(':')
+          id = `${day}${time[0]}${time[1]}${time[2]}${time[3]}`
+          if(time[1].length ==1) { time[1] = '00'}
+          if(time[3].length ==1) { time[3] = '00'}
+
+          var html = `<tr><td>${dow[day]}</td><td>${time[0]}:${time[1]}</td><td>${time[2]}:${time[3]}</td><td><button id='${id}' type='button' class='btn btn-block btn-danger btn-sm' onClick='return removeFromSchedule("${id}", ${day}, ${time[0]}, ${time[1]}, ${time[2]}, ${time[3]} );'>Remove</button></td></tr>`
+
+          $("#tableBody").append(html);
+        }
+      }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve schedule.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function addToSchedule(day, start_hour, start_minute, end_hour, end_minute) {
+
+    $("#buttonAdd").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/schedule",
+      method: "POST",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        day: day,
+        start_hour: start_hour,
+        start_minute: start_minute,
+        end_hour: end_hour,
+        end_minute: end_minute
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully added new section!", "Success")
+      getSchedule();
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not add section to schedule.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonAdd").removeAttr("disabled");
+    })
+  }
+
+  function removeFromSchedule(id, day, start_hour, start_minute, end_hour, end_minute) {
+
+    $("#" + id).attr("disabled", true);
+
+    $.ajax({
+      url: "/api/schedule",
+      method: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        day: day,
+        start_hour: start_hour,
+        start_minute: start_minute,
+        end_hour: end_hour,
+        end_minute: end_minute
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully removed section!", "Success")
+      getSchedule();
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not remove section from schedule.", "Error (" + xhr.status + ")")
+    })
+  }
+
+  function getSettings() {
+      $.ajax({
+        url: "/api/settings",
+        method: "GET",
+        statusCode: { 401: function() { logout() } }
+      })
+      .done(function(data, statusText, xhr) {
+        $("#weekend").bootstrapSwitch('disabled', false);
+        $("#weekend").bootstrapSwitch('state', data.weekend, true)
+      })
+      .fail(function(xhr, statusText) {
+        toastr.error("Could not retrieve course settings.", "Error (" + xhr.status + ")")
+      })
+  }
+
+  function updateSetting(data) {
+
+    $("#weekend").bootstrapSwitch('disabled', true);
+
+    $.ajax({
+      url: "/api/settings",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(data),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated option!", "Success")
+      getSettings()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update option.", "Error (" + xhr.status + ")")
+    });
+  }
+
+</script>
+{% endblock %}

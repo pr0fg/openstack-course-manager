@@ -1,0 +1,91 @@
+{% extends "_base.html" %}
+
+{% set title = 'VM Retention Settings' %}
+{% set page = 'vms' %}
+
+{% block externalcss %}
+{% endblock %}
+
+{% block customcss %}
+{% endblock %}
+
+{% block content %}
+<div class="callout callout-danger">
+  <h5>Predeploy Functionality</h5>
+  <p>If VMs are not deleted between lecture/lab periods, student VMs will be placed back in their account before the next period. This will continue to happen until this functionality is disabled.</p>
+</div>
+
+<div class="card card-default">
+  <div class="card-header">
+    <h3 class="card-title"><i class="fas fa-trash mr-2"></i>Retain VMs Between Classes/Labs:</h3>
+  </div>
+  <div class="card-body">
+    <input id="vms" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+  </div>
+</div>
+
+<div class="callout callout-warning">
+  <h5>Group Functionality</h5>
+  <p>Group VMs will never be deleted, only retained.</p>
+</div>
+{% endblock %}
+
+{% block externaljs %}
+<!-- Bootstrap Switch -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" integrity="sha512-J+763o/bd3r9iW+gFEqTaeyi+uAphmzkE/zU8FxY6iAvD3nQKXa+ZAWkBI9QS9QkYEKddQoiy0I5GDxKf/ORBA==" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    $("input[data-bootstrap-switch]").each(function(){
+      $(this).bootstrapSwitch({disabled: true});
+    });
+
+    $("#vms").on('switchChange.bootstrapSwitch', function(event, state) {
+       updateSetting({'keep': state});
+    });
+
+    getSettings();
+
+  })
+
+  function getSettings() {
+      $.ajax({
+        url: "/api/settings",
+        method: "GET",
+        statusCode: { 401: function() { logout() } }
+      })
+      .done(function(data, statusText, xhr) {
+        $("#vms").bootstrapSwitch('disabled', false);
+        $("#vms").bootstrapSwitch('state', data.keep, true)
+      })
+      .fail(function(xhr, statusText) {
+        toastr.error("Could not retrieve course settings.", "Error (" + xhr.status + ")")
+      })
+  }
+
+  function updateSetting(data) {
+
+    $("#vms").bootstrapSwitch('disabled', true);
+
+    $.ajax({
+      url: "/api/settings",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(data),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated option!", "Success")
+      getSettings()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update option.", "Error (" + xhr.status + ")")
+    });
+  }
+
+</script>
+{% endblock %}

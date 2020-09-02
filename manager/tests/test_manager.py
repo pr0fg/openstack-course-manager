@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # OpenStack Course Manager  Copyright (C) 2020  Garrett Hayes
+
 import random
 import string
 import os

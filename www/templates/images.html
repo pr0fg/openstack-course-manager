@@ -1,0 +1,113 @@
+{% extends "_base.html" %}
+
+{% set title = 'VM Images' %}
+{% set page = 'images' %}
+
+{% block externalcss %}
+{% endblock %}
+
+{% block customcss %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  <div class="col-6">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-lock mr-2"></i>Private Images</h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <tbody id="tableBodyPrivateImages">
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <div class="col-6">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-lock-open mr-2"></i>Shared Images</h3>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <tbody id="tableBodySharedImages">
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+</div>
+<!-- /.row -->
+{% endblock %}
+
+{% block externaljs %}
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    getImages()
+
+  })
+
+  function getImages(wait=0) {
+
+    $.ajax({
+      url: "/api/images",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+
+      $("#tableBodyPrivateImages").empty();
+      for (var image in data.private) {
+        var html = `<tr><td>${data.private[image].name}</td><td><button type='button' id='${data.private[image].id}' class='btn btn-danger btn-sm float-right' onClick='return shareImage("${data.private[image].id}", true);'>Share with Class</button></td></tr>`;
+        $("#tableBodyPrivateImages").append(html);
+      }
+      $("#tableBodySharedImages").empty();
+      for (var image in data.shared) {
+        var html = `<tr><td>${data.shared[image].name}</td><td><button type='button' id='${data.shared[image].id}' class='btn btn-danger btn-sm float-right' onClick='return shareImage("${data.shared[image].id}", false);'>Share with Class</button></td></tr>`;
+        $("#tableBodySharedImages").append(html);
+      }
+
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve images.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function shareImage(id, shared) {
+
+    $("#" + id).attr("disabled", true);
+    
+    $.ajax({
+      url: "/api/images",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        image: id,
+        shared: shared,
+      }),
+      cache: false
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated image setting! It may take a few moments for this change to show up.", "Success")
+      setTimeout(getImages, 10000)
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update image setting.", "Error (" + xhr.status + ")")
+    });
+  }
+
+</script>
+{% endblock %}

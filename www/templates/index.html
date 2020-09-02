@@ -1,0 +1,127 @@
+{% extends "_base.html" %}
+
+{% set title = 'Dashboard' %}
+{% set page = 'index' %}
+
+{% block externalcss %}
+{% endblock %}
+
+{% block customcss %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  <div class="col-12">
+    <div class="callout callout-success">
+      <h4>Course Setup Guide</h4>
+      <ol class='m-0'>
+        <li>
+          Upload your MyCampus CSV roster under <strong>Students</strong>.
+        </li>
+        <li>
+          Set a schedule under <strong>Schedule</strong>.
+        </li>
+        <li>
+          Set a quota restriction under <strong>Quota Restrictions</strong>.
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="callout callout-warning">
+      <h4>Important Note</h4>
+      <p class="mb-1">It is <strong>very important</strong> that you set a quota under <strong>Quota Restrictions</strong> to ensure students can't deploy more resources than they absolutely need!</p>
+      <p>This quota represents the maximum number of VMs and other assets that can be deployed by each student or group. If this quota is too open, you may run out of resources.</p>
+    </div>
+  </div>
+
+</div>
+ <!-- /.row -->
+
+<!-- Small Box (Stat card) -->
+<h5 class="mb-2 mt-4">Registered Students & Groups</h5>
+<div class="row">
+  <div class="col-lg-4 col-6">
+    <!-- small card -->
+    <div class="small-box bg-primary">
+      <div class="inner">
+        <h3 id="studentCount">0</h3>
+        <p>Registered Students</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-user"></i>
+      </div>
+      <a href="/students.html" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+  <div class="col-lg-4 col-6">
+    <!-- small card -->
+    <div class="small-box bg-info">
+      <div class="inner">
+        <h3 id="groupCount">0</h3>
+        <p>Group(s)</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <a href="/groups.html" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+  <div class="col-lg-4 col-6">
+    <!-- small card -->
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3 id="instructorCount">0</h3>
+        <p>Instructor(s)</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-chalkboard-teacher"></i>
+      </div>
+      <a href="/instructors.html" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- /.row -->
+
+</div>
+<!-- /.row -->
+{% endblock %}
+
+{% block externaljs %}
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    getStats()
+
+  })
+
+  function getStats() {
+    $.ajax({
+      url: "/api/stats",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      $("#studentCount").html(data.students)
+      $("#groupCount").html(data.groups)
+      $("#instructorCount").html(data.instructors)
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve stats.", "Error (" + xhr.status + ")")
+    })
+  }
+
+</script>
+{% endblock %}

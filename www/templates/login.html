@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course Manager | Log In</title>
+
+  <!-- Base CSS -->
+  {% include "_base_css.html" %}
+
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+
+  <div class="login-logo">
+    <b>Course</b>Manager
+  </div>
+  <!-- /.login-logo -->
+
+  <div class="card">
+    <div class="card-body login-card-body">
+      <p class="login-box-msg">Sign in using your cloud credentials:</p>
+
+      <form>
+
+        <div class="input-group mb-3">
+          <input id="username" type="username" class="form-control" placeholder="Username">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group mb-3">
+          <input id="course_code" type="text" class="form-control" placeholder="Course Code (e.g. INFR-1111)">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-users"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group mb-3">
+          <input id="password" type="password" class="form-control" placeholder="Password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+      <div class="text-center mb-3">
+        <input id="submitButton" class=" btn btn-block btn-primary mr-2" name="submit" type="submit" value="Sign In" onclick="login()"></input>
+      </div>
+
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- Base JS -->
+{% include "_base_js.html" %}
+{% include "_base_custom_js.html" %}
+
+<!-- Extra JS -->
+<script>
+
+  function login() {  
+
+    var username = document.getElementById('username').value;
+    var course_code = document.getElementById('course_code').value
+    var password = document.getElementById('password').value;
+
+    $("#submitButton").attr("disabled", true);
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/login',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({
+        'username': username,
+        'password': password,
+        'course_code': course_code
+      }),
+      statusCode: {
+        200: function(data) {
+          var new_exp = new Date(new Date().getTime() + data.token.expires * 1000);
+          Cookies.set(data.token.name, data.token.value, { expires: new_exp })
+          window.location.href = '/index.html'
+        },
+        401: function() {
+          toastr.error('Invalid username, password, or course code')
+        }
+      }
+    })
+    .always(function(data) {
+      $("#submitButton").removeAttr("disabled");
+    })
+
+  }
+
+</script>
+
+</body>
+</html>

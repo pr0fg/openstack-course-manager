@@ -1,0 +1,327 @@
+{% extends "_base.html" %}
+
+{% set title = 'Manage Students' %}
+{% set page = 'students' %}
+
+{% block externalcss %}
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.css" integrity="sha512-Yy2EzOvLO8+Vs9hwepJPuaRWpwWZ/pamfO4lqi6t9gyQ9DhQ1k3cBRa+UERT/dPzIN/RHZAkraw6Azs4pI0jNg==" crossorigin="anonymous" />
+{% endblock %}
+
+{% block customcss %}
+<style>
+    .error {
+      border: solid 2px #FF0000;  
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card">
+      <div class="card-body">
+        <table id="table" class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-plus mr-2"></i>Add Student</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-4">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-user mr-2"></i> Banner ID</span>
+                </div>
+                <input type="number" class="form-control" id="formId" placeholder="Student ID">
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="input-group mb-3">
+                <input type="text" id="formEmail" class="form-control" placeholder="Email">
+                <div class="input-group-append">
+                  <span class="input-group-text">@ontariotechu.net</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary">Add</button>
+            </div>
+
+        </div>
+
+      </div>
+
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card text-white bg-warning mb-3">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-exclamation-triangle mr-2"></i>Important Notes</h3>
+      </div>
+      <div class="card-body">
+        <p>You can find your course's CSV in MyCampus under <strong>Faculty -&gt; OT Faculty -&gt; Faculty Schedules and Class List Menu -&gt; Export Class Roster</strong></p>
+        <span>After you upload a CSV, it may take up to 10 minutes to process and email all your students. Please be patient as the page updates.</span>
+      </div>
+      <!-- /.card-body -->
+
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-upload mr-2"></i>Upload MyCampus CSV</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+          <div class="col-10">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="CSVInputFile">
+              <label id="filename" class="custom-file-label" for="CSVInputFile">Choose file</label>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group-append">
+              <button type="button" id="buttonUpload" class="btn btn-block btn-primary disabled"><i class="nav-icon fas fa-upload mr-2 ml-2"></i></button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+{% endblock %}
+
+{% block externaljs %}
+<!-- DataTables -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-responsive/2.2.5/dataTables.responsive.min.js" integrity="sha512-+lcEupw9bvzdp2Ey2GU0VfC7kvjySIYdCC4higXahhw8zUPKO1TUG8O3xf3QZV8rUwQjF5CgJR6V43r/JRhR3w==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.js" integrity="sha512-OiHNq9acGP68tNJIr1ctDsYv7c2kuEVo2XmB78fh4I+3Wi0gFtZl4lOi9XIGn1f1SHGcXGhn/3VHVXm7CYBFNQ==" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    getStudents();
+    setTimeout(getStudents, 10000)
+
+    $("#table").DataTable({
+      "responsive": true,
+      "autoWidth": false,
+      "paging": true,
+    });
+
+    $("#buttonAdd").click(function(){
+
+      $('#formId').removeClass('error')
+
+      var id = $("#formId").val();
+      var email = $("#formEmail").val().match(/^[a-z0-9\-\.]{3,}$/g);;
+
+      if(!id || id < 100000000 || id > 100999999) {
+        $('#formId').addClass('error')
+        toastr.error("Invalid student ID!", "Error")
+      }
+      else if(!email) {
+        $('#formEmail').addClass('error')
+        toastr.error("Invalid email address!", "Error")
+      }
+      else {
+        addStudent(id, email);
+      }
+
+    });
+
+    $("#buttonUpload").attr("disabled", true);
+
+    const inputElement = document.getElementById("CSVInputFile");
+    inputElement.addEventListener("change", handleFiles, false);
+    
+    function handleFiles() {
+
+      var file = document.getElementById('CSVInputFile').files[0];
+
+      if(file.type != 'text/csv') {
+        toastr.error("Please upload a valid CSV file!", "Error")
+        $("#buttonUpload").attr("disabled", true);
+      }
+
+      else {
+
+        $("#buttonUpload").removeAttr("disabled");
+        $("#filename").text(file.name);
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = processCSV;
+      }
+    }
+
+  });
+
+  function processCSV(event) {
+
+    toastr.success("Processing students. Please wait...", "Success", {timeOut: 60000})
+
+    csv = event.target.result.split("\n")
+    csv.forEach(async function(line) {
+      
+      entries = line.split(',')
+
+      if(entries.length === 10) {
+        
+        var csv_course = entries[3].replace(/\ /g,'-')
+        
+        if(csv_course.includes(course) && entries[9].includes('@')) {
+
+          $.ajax({
+            url: "/api/students",
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ 
+              username: entries[4].replace(/"/g,''),
+              email: entries[9].replace(/"/g,'')
+            }),
+            statusCode: { 401: function() { logout() } }
+          })
+          .done(function(data, statusText, xhr) {
+            getStudents()
+          })
+
+        }
+      }
+
+    })
+
+  }
+
+  function getStudents() {
+
+    $.ajax({
+      url: "/api/students",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      
+      $("#tableBody").empty();
+
+      for (var student in data) {
+        var html = `<tr><td>${student}</td><td>${data[student].email}</td><td><button id='${student}' type='button' class='btn btn-block btn-danger' onClick='return removeStudent("${student}");'>Remove</button></td></tr>`;
+        $("#tableBody").append(html);
+      }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve student list.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function addStudent(id, email) {
+
+    $("#buttonAdd").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/students",
+      method: "POST",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        username: id,
+        email: email + '@ontariotechu.net'
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully added student to course! It may take a few moments for them to show up.", "Success")
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not add student to course.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonAdd").removeAttr("disabled");
+    })
+  }
+
+  function removeStudent(id) {
+
+    $("#" + id).attr("disabled", true);
+
+    $.ajax({
+      url: "/api/students",
+      method: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({  
+        username: id
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully removed student from course!", "Success")
+      getStudents()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not remove student " + id + " from course.", "Error (" + xhr.status + ")")
+      $("#" + id).removeAttr("disabled");
+    })
+    .always(function() {
+      $("#" + id).removeAttr("disabled");
+    })
+  }
+
+</script>
+{% endblock %}

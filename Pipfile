@@ -9,6 +9,11 @@ pytest = "*"
 [packages]
 openstacksdk = "*"
 python-dotenv = "*"
+flask = "*"
+flask-restful = "*"
+celery = "*"
+expiring-dict = "*"
+staticjinja = "*"
 
 [requires]
 python_version = "3.8"

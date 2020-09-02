@@ -1,8 +1,8 @@
-#!/usr/bin/env python
-
 # OpenStack Course Manager  Copyright (C) 2020  Garrett Hayes
 
 import os
+import string
+import random
 from os.path import join, dirname
 
 from dotenv import load_dotenv
@@ -19,13 +19,22 @@ class Config(object):
     OS_DOMAIN_ID = os.getenv('OS_DOMAIN_ID')
     OS_USER_ROLE_ID = os.getenv('OS_USER_ROLE_ID')
 
-    # Optional for Pytest
+    # Optional for Pytest and development
     OS_TEST_IMAGE_ID = os.getenv('OS_TEST_IMAGE_ID')
     OS_TEST_IMAGE_FLAVOR_ID = os.getenv('OS_TEST_IMAGE_FLAVOR_ID')
+    WWW_PATH = os.getenv('WWW_PATH')
 
     # Celery Details for Worker
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL')
+
+    # General Settings
+    CRON_TOKEN = ''.join(random.choice(
+                 string.ascii_uppercase+string.ascii_lowercase+string.digits)
+                 for _ in range(64))
+
+    SESSION_TIMEOUT = int(os.getenv('SESSION_TIMEOUT')) \
+        if os.getenv('SESSION_TIMEOUT') else 3600
 
     # Email Backend
     EMAIL_DOMAINS = os.getenv('EMAIL_DOMAINS').split(',')
@@ -59,7 +68,7 @@ class Config(object):
                 'instances': 5,
                 'cores': 5,
                 'ram': 10240,
-                'networks': 10
+                'networks': 5
             }
         }
     }

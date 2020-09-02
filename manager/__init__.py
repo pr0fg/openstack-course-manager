@@ -11,14 +11,11 @@ import smtplib
 import ssl
 from datetime import time, datetime
 
-# from celery import Task
-
 import openstack
 
 from config import Config
 
 
-# class OpenStackCourseManager(Task):
 class OpenStackCourseManager():
 
     def __init__(self, debug=False):
@@ -109,7 +106,8 @@ class OpenStackCourseManager():
         return wrapper_requires_image_in_course
 
     # ------------------------------------------------------------------------
-    def login(self, check_credentials=False, course_code=None, username=None, password=None):
+    def login(self, check_credentials=False, course_code=None, username=None,
+              password=None):
 
         if check_credentials:
             cloud = openstack.connect(
@@ -146,7 +144,8 @@ class OpenStackCourseManager():
     # Public Getters
 
     @requires_course_code
-    def get_users(self, course_code, instructors=False, students=False, groups=False, details=False, **kwargs):
+    def get_users(self, course_code, instructors=False, students=False,
+                  groups=False, details=False, **kwargs):
 
         if details:
             users = {'instructors': {}, 'students': {}, 'groups': {}}
@@ -245,7 +244,8 @@ class OpenStackCourseManager():
     # ------------------------------------------------------------------------
     # Internal Getters
 
-    def _get_project(self, course_code, project_name_or_id, create=False, parent_id=None):
+    def _get_project(self, course_code, project_name_or_id, create=False,
+                     parent_id=None):
 
         project = self._cloud.get_project(project_name_or_id)
 
@@ -272,7 +272,8 @@ class OpenStackCourseManager():
     def _get_student_projects(self, course_code, **kwargs):
         return [
             project for project in
-            self._cloud.identity.projects(parent_id=kwargs.get('course_project').id)
+            self._cloud.identity.projects(
+                parent_id=kwargs.get('course_project').id)
             if 'Group' not in project.name
         ]
 
@@ -280,7 +281,8 @@ class OpenStackCourseManager():
     def _get_group_projects(self, course_code, **kwargs):
         return [
             project for project in
-            self._cloud.identity.projects(parent_id=kwargs.get('course_project').id)
+            self._cloud.identity.projects(
+                parent_id=kwargs.get('course_project').id)
             if 'Group' in project.name
         ]
 
@@ -372,7 +374,8 @@ class OpenStackCourseManager():
             logging.info('Course not currently scheduled')
             return False
 
-    def _get_vms(self, course_code, students=False, groups=False, project_dict=False):
+    def _get_vms(self, course_code, students=False, groups=False,
+                 project_dict=False):
 
         servers = []
         servers_as_project_dict = {}
@@ -478,7 +481,8 @@ class OpenStackCourseManager():
         return True
 
     @requires_course_code
-    def set_access(self, course_code, project=None, students=False, groups=False, enabled=False, **kwargs):
+    def set_access(self, course_code, project=None, students=False,
+                   groups=False, enabled=False, **kwargs):
 
         if project:
             if not project.is_enabled == enabled:
@@ -492,14 +496,16 @@ class OpenStackCourseManager():
         if students:
             for project in self._get_student_projects(course_code):
                 if not project.is_enabled == enabled:
-                    self._cloud.identity.update_project(project, enabled=enabled)
+                    self._cloud.identity.update_project(
+                        project, enabled=enabled)
                     logging.info(f'{course_code}: Updated project access for {project.name}:\
                         {enabled}')
 
         if groups:
             for project in self._get_group_projects(course_code):
                 if not project.is_enabled == enabled:
-                    self._cloud.identity.update_project(project, enabled=enabled)
+                    self._cloud.identity.update_project(
+                        project, enabled=enabled)
                     logging.info(f'{course_code}: Updated project access for {project.name}:\
                         {enabled}')
 
@@ -536,7 +542,8 @@ class OpenStackCourseManager():
         return True
 
     @requires_course_code
-    def add_user(self, course_code, username, email, instructor=False, **kwargs):
+    def add_user(self, course_code, username, email, instructor=False,
+                 **kwargs):
 
         user = self._get_user(str(username), email=str(email), create=True)
         if not user:
@@ -551,12 +558,14 @@ class OpenStackCourseManager():
                 parent_id=kwargs.get('course_project').id
             )
 
-        return self._add_user_to_project(course_code, user, kwargs.get('course_project')
+        return self._add_user_to_project(course_code, user,
+                                         kwargs.get('course_project')
                                          if instructor else project)
 
     @requires_course_code
     @requires_student
-    def add_student_to_group(self, course_code, username, group_number, **kwargs):
+    def add_student_to_group(self, course_code, username, group_number,
+                             **kwargs):
 
         try:
             if not int(group_number) > 0:
@@ -579,7 +588,8 @@ class OpenStackCourseManager():
                                          project)
 
     @requires_course_code
-    def add_schedule(self, course_code, day, start_hour, start_minute, end_hour, end_minute, **kwargs):
+    def add_schedule(self, course_code, day, start_hour, start_minute,
+                     end_hour, end_minute, **kwargs):
 
         try:
 
@@ -667,7 +677,8 @@ class OpenStackCourseManager():
         return result
 
     @requires_course_code
-    def remove_user(self, course_code, username, group_number=None, instructor=False, **kwargs):
+    def remove_user(self, course_code, username, group_number=None,
+                    instructor=False, **kwargs):
 
         if group_number:
             project_name = f'{course_code}-Group-{group_number}'
@@ -692,9 +703,11 @@ class OpenStackCourseManager():
                 project.name, domain_id=Config.OS_DOMAIN_ID)
 
         if result:
-            logging.info(f'{course_code}: Removed {username} from {project_name}')
+            logging.info(f'{course_code}: Removed {username} from \
+                {project_name}')
         else:
-            logging.error(f'{course_code}: Failed to remove {username} from {project_name}')
+            logging.error(f'{course_code}: Failed to remove {username} from \
+                {project_name}')
 
         return result
 
@@ -712,7 +725,8 @@ class OpenStackCourseManager():
         return result
 
     @requires_course_code
-    def remove_schedule(self, course_code, day, start_hour, start_minute, end_hour, end_minute, **kwargs):
+    def remove_schedule(self, course_code, day, start_hour, start_minute,
+                        end_hour, end_minute, **kwargs):
 
         try:
 
@@ -810,9 +824,11 @@ class OpenStackCourseManager():
         )
 
         if result:
-            logging.info(f'{course_code}: Removed {user.name} from {project.name}')
+            logging.info(f'{course_code}: Removed {user.name} from \
+                {project.name}')
         else:
-            logging.error(f'{course_code}: Failed to remove {user.name} from {project.name}')
+            logging.error(f'{course_code}: Failed to remove {user.name} from \
+                {project.name}')
 
         return result
 
@@ -973,7 +989,8 @@ class OpenStackCourseManager():
         return True
 
     @requires_course_code
-    def unshelve_vms(self, course_code, students=False, groups=False, **kwargs):
+    def unshelve_vms(self, course_code, students=False, groups=False,
+                     **kwargs):
 
         logging.info(f'{course_code}: Unshelving VMs \
             (students: {students}, groups: {groups})')
@@ -1050,7 +1067,7 @@ class OpenStackCourseManager():
 
     def _send_password_reset_email(self, user, plaintext_password):
 
-        file = open('templates/email/password_reset.template')
+        file = open('manager/templates/email/password_reset.template')
 
         message = file.read().format(
             username=user.name,
@@ -1064,9 +1081,9 @@ class OpenStackCourseManager():
                                   instructor=False):
 
         if instructor:
-            file = open('templates/email/instructor.template')
+            file = open('manager/templates/email/instructor.template')
         else:
-            file = open('templates/email/registration.template')
+            file = open('manager/templates/email/registration.template')
 
         message = file.read().format(
             course=course_code,

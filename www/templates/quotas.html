@@ -1,0 +1,251 @@
+{% extends "_base.html" %}
+
+{% set title = 'Quota Restrictions' %}
+{% set page = 'quotas' %}
+
+{% block externalcss %}
+{% endblock %}
+
+{% block customcss %}
+{% endblock %}
+
+{% block content %}
+<div class="callout callout-danger">
+  <h5>Quotas Are Important!</h5>
+  <p>Quotas help us prevent students from deploying too many resources. If a suitable quota is not set, students may deploy too many resources. This could result in poor VM performance. We recommend you set the minimum number of resources reasonably needed for your course.</p>
+</div>
+
+<div class="row">
+
+  <!-- left column -->
+  <div class="col-md-6">
+    <div class="card card-success">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user mr-2"></i>Per Student</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="form-group">
+          <label>Maximum Number of VMs</label>
+          <select id="studentQuotaVMCount" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Cores Per VM</label>
+          <select id="studentQuotaCores" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>RAM Per VM</label>
+          <select id="studentQuotaRAM" class="form-control">
+            <option value='1024'>1 GB</option>
+            <option value='2048'>2 GB</option>
+            <option value='4096'>4 GB</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="studentQuotaAllowNetworks">
+            <label class="custom-control-label" for="studentQuotaAllowNetworks">Allow Students to Make Custom Networks</label>
+          </div>
+        </div>
+
+        <button type="button" id="buttonStudentQuotaSave" class="btn btn-success">Save</button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- right column -->
+  <div class="col-md-6">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-users mr-2"></i>Per Group (If Applicable)</h3>
+      </div>
+
+      <div class="card-body">  
+
+        <div class="form-group">
+          <label>Maximum Number of VMs</label>
+          <select id="groupQuotaVMCount" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Cores Per VM</label>
+          <select id="groupQuotaCores" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>RAM Per VM</label>
+          <select id="groupQuotaRAM" class="form-control">
+            <option value='1024'>1 GB</option>
+            <option value='2048'>2 GB</option>
+            <option value='4096'>4 GB</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="groupQuotaAllowNetworks">
+            <label class="custom-control-label" for="groupQuotaAllowNetworks">Allow Groups to Make Custom Networks</label>
+          </div>
+        </div>
+
+        <button type="button" id="buttonGroupQuotaSave" class="btn btn-primary">Save</button>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block externaljs %}
+{% endblock %}
+
+{% block customjs %}
+<script>
+
+  $(function () {
+
+    $("#buttonStudentQuotaSave").click(function(){
+      var vms = parseInt($("#studentQuotaVMCount").val());
+      var cores = parseInt($("#studentQuotaCores").val()) * vms;
+      var ram = parseInt($("#studentQuotaRAM").val()) * vms;
+      var networks = $("#studentQuotaAllowNetworks").is(":checked");
+      if(networks === true) { networks = 10} else { networks = 0 }
+      updateStudentQuota(vms, cores, ram, networks);
+    });
+
+    $("#buttonGroupQuotaSave").click(function(){
+      var vms = parseInt($("#groupQuotaVMCount").val());
+      var cores = parseInt($("#groupQuotaCores").val()) * vms;
+      var ram = parseInt($("#groupQuotaRAM").val()) * vms;
+      var networks = $("#groupQuotaAllowNetworks").is(":checked");
+      if(networks === true) { networks = 10} else { networks = 0 }
+      updateGroupQuota(vms, cores, ram, networks);
+    });
+
+    getQuotas()
+
+  });
+
+  function getQuotas() {
+
+    $.ajax({
+      url: "/api/quota",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+        console.log(data)
+
+        $("#studentQuotaVMCount").val(data.students.instances)
+        $("#studentQuotaCores").val(data.students.cores / data.students.instances)
+        $("#studentQuotaRAM").val(parseInt(data.students.ram) / parseInt(data.students.instances))
+
+        if(parseInt(data.students.networks)> 0) {
+          $("#studentQuotaAllowNetworks").prop('checked', true);
+        } 
+        else { 
+          $("#studentQuotaAllowNetworks").prop('checked', false);
+        }
+
+        $("#groupQuotaVMCount").val(data.groups.instances)
+        $("#groupQuotaCores").val(data.groups.cores / data.groups.instances)
+        $("#groupQuotaRAM").val(parseInt(data.groups.ram) / parseInt(data.groups.instances))
+
+        if(parseInt(data.groups.networks)> 0) {
+          $("#groupQuotaAllowNetworks").prop('checked', true);
+        } 
+        else { 
+          $("#groupQuotaAllowNetworks").prop('checked', false);
+        }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve quota settings.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function updateStudentQuota(vms, cores, ram, networks) {
+
+    $("#buttonStudentQuotaSave").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/quota",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        students: {
+          instances: vms,
+          cores: cores,
+          ram: ram,
+          networks: networks
+        }
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated student quota!", "Success")
+      getQuotas()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update student quota.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonStudentQuotaSave").removeAttr("disabled");
+    })
+  }
+
+  function updateGroupQuota(vms, cores, ram, networks) {
+
+    $("#buttonGroupQuotaSave").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/quota",
+      method: "PATCH",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        groups: {
+          instances: vms,
+          cores: cores,
+          ram: ram,
+          networks: networks
+        }
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully updated group quota!", "Success")
+      getQuotas()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not update group quota.", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonGroupQuotaSave").removeAttr("disabled");
+    })
+  }
+
+</script>
+{% endblock %}

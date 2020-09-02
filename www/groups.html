@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course Manager | Manage Groups</title>
+  
+  <!-- Base CSS -->
+    <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.1.2/collection/components/icon/icon.min.css" integrity="sha512-DR9Jj0uFIfe7v1QLrvPRusRxqdSnVSVRyRBt1H8gcRQgxMKEwsOMSNYs0hyIpo8AITFyCMDC2Q1fCg1XcgdYig==" crossorigin="anonymous" />
+  <!-- Theme style -->
+  <link rel="stylesheet" href="css/adminlte.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ==" crossorigin="anonymous" />
+
+  <!-- External CSS -->
+  
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" integrity="sha512-PT0RvABaDhDQugEbpNMwgYBCnGCiTZMh9yOzUsJHDgl/dMhD9yjHAwoumnUk3JydV3QTcIkNDuN40CJxik5+WQ==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.css" integrity="sha512-Yy2EzOvLO8+Vs9hwepJPuaRWpwWZ/pamfO4lqi6t9gyQ9DhQ1k3cBRa+UERT/dPzIN/RHZAkraw6Azs4pI0jNg==" crossorigin="anonymous" />
+
+
+  <!-- Custom CSS -->
+  
+<style>
+    .error {
+      border: solid 2px #FF0000;  
+    }
+</style>
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" role="button">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span id="courseCode" class="ml-2 float-right text-muted text-md">Logged in as:</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/login.html" role="button" onclick="logout()">
+          <span class="ml-2 float-right text-muted text-sm">Logout</span>
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </li>
+    </ul>
+
+  </nav>
+  <!-- /.navbar -->
+
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+    <!-- Brand Logo -->
+    <a href="index.html" class="brand-link">
+      <span class="brand-text font-weight-light"><i class="nav-icon fas fa-cloud mr-2 ml-3"></i>Course Manager</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li class="nav-item">
+            <a href="index.html" class="nav-link ">
+              <i class="nav-icon fas fa-home"></i>
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-header">COURSE SETTINGS</li>
+          <li class="nav-item">
+            <a href="schedule.html" class="nav-link ">
+              <i class="nav-icon far fa-calendar-alt"></i>
+              <p>
+                Schedule
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="vms.html" class="nav-link ">
+              <i class="nav-icon far fa-clock"></i>
+              <p>
+                VM Retention
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="quotas.html" class="nav-link ">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Quota Restrictions
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="images.html" class="nav-link ">
+              <i class="nav-icon fas fa-cog"></i>
+              <p>
+                VM Images
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-header">USER MANAGEMENT</li>
+          <li class="nav-item">
+            <a href="instructors.html" class="nav-link ">
+              <i class="nav-icon fas fa-chalkboard-teacher"></i>
+              <p>
+                Instructors
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="students.html" class="nav-link ">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Students
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="groups.html" class="nav-link active">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Groups
+              </p>
+            </a>
+          </li>
+          
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Manage Groups</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item active">Home</li>
+              <li class="breadcrumb-item active">Manage Groups</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+      
+<div class="callout callout-danger">
+  <h5>Are groups required?</h5>
+  <p>Groups put a significant load on the cloud environment since their VMs are retained between classes/labs. This option is generally only used for final projects. <b>If students are working together during lab periods, please have them share SSH keys instead!</b></p>
+</div>
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card">
+      <div class="card-body">
+        <table id="table" class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Email</th>
+            <th>Group Number</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user-plus mr-2"></i>Add Student to Group</h3>
+      </div>
+      <div class="card-body">
+      
+        <div class="row">
+
+            <div class="col-5">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-user mr-2"></i> Banner ID</span>
+                </div>
+                <input type="number" class="form-control" id="formStudentId" placeholder="Student ID">
+              </div>
+            </div>
+
+            <div class="col-5">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fas fa-users mr-2"></i> Group Number</span>
+                </div>
+                <input type="number" class="form-control" id="formGroupId" placeholder="Group Number">
+              </div>
+            </div>
+
+            <div class="col-2">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary">Add</button>
+            </div>
+
+          </div>
+
+        </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card text-white bg-warning mb-2">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-question-circle mr-2"></i>Group Upload Guide</h3>
+      </div>
+      <div class="card-body">
+        <ol class="m-0">
+          <p>Groups should be uploaded using the CSV upload utility below. CSVs should be an actual CSV file in the following format <b>with no spaces</b> between elements:</p>
+          <i>Group,group_number,student_id_1,student_id_2,student_id_3,student_id_n</i><br><br>
+          <p><strong>For example:</strong></p>
+          Group,1,100111111,100222222,100333333,100444444<br>
+          Group,2,100555555,100666666,100777777<br>
+          <br>
+          <strong>Note that students must already be registered in the course!</strong>
+        </ol>
+      </div>
+      <!-- /.card-body -->
+
+    </div>
+    <!-- /.card -->
+
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-upload mr-2"></i>Upload Group CSV</h3>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+
+          <div class="col-10">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="CSVInputFile">
+              <label id="filename" class="custom-file-label" for="CSVInputFile">Choose file</label>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="input-group-append">
+              <button type="button" id="buttonUpload" class="btn btn-block btn-primary disabled"><i class="nav-icon fas fa-upload mr-2 ml-2"></i></button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+    
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+</div>
+<!-- ./wrapper -->
+
+<!-- Base JS -->
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<!-- jQuery Cookie Plugin -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous"></script>
+<!-- Bootstrap 4 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
+<!-- Toastr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous"></script>
+<!-- OSCM -->
+<script src="js/oscm.js"></script>
+
+<!-- External JS -->
+
+<!-- DataTables -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-responsive/2.2.5/dataTables.responsive.min.js" integrity="sha512-+lcEupw9bvzdp2Ey2GU0VfC7kvjySIYdCC4higXahhw8zUPKO1TUG8O3xf3QZV8rUwQjF5CgJR6V43r/JRhR3w==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-responsive-bs4/2.2.5/responsive.bootstrap4.min.js" integrity="sha512-OiHNq9acGP68tNJIr1ctDsYv7c2kuEVo2XmB78fh4I+3Wi0gFtZl4lOi9XIGn1f1SHGcXGhn/3VHVXm7CYBFNQ==" crossorigin="anonymous"></script>
+
+
+<!-- Custom JS -->
+
+<script>
+
+  $(function () {
+
+    getGroups();
+    setTimeout(getGroups, 10000)
+
+    $("#table").DataTable({
+      "responsive": true,
+      "autoWidth": false,
+      "paging": true,
+    });
+    
+    $("#buttonAdd").click(function(){
+
+      $('#formStudentId').removeClass('error')
+      $('#formGroupId').removeClass('error')
+
+      var sid = parseInt($("#formStudentId").val());
+      var gid = parseInt($("#formGroupId").val());
+
+      if(!sid || sid < 100400000 || sid > 100999999) {
+        $('#formStudentId').addClass('error')
+        toastr.error("Invalid student ID!", "Error")
+      }
+      else if(!gid || gid < 1 || gid > 50) {
+        $('#formGroupId').addClass('error')
+        toastr.error("Invalid group number!", "Error")
+      }
+      else {
+        addToGroup(sid, gid);
+      }
+    });
+
+    $("#buttonUpload").attr("disabled", true);
+
+    const inputElement = document.getElementById("CSVInputFile");
+    inputElement.addEventListener("change", handleFiles, false);
+
+    function handleFiles() {
+
+      var file = document.getElementById('CSVInputFile').files[0];
+
+      if(file.type != 'text/csv') {
+        toastr.error("Please upload a valid CSV file!", "Error")
+        $("#buttonUpload").attr("disabled", true);
+      }
+
+      else {
+
+        $("#buttonUpload").removeAttr("disabled");
+        $("#filename").text(file.name);
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = processCSV;
+      }
+    }
+
+  });
+
+  function processCSV(event) {
+
+    toastr.success("Processing groups. Please wait...", "Success", {timeOut: 60000})
+
+    csv = event.target.result.split("\n")
+    csv.forEach(async function(line) {
+      
+      entries = line.split(',')
+
+      if(entries.length >= 3) {
+        
+        group_id = parseInt(entries[1])
+        entries.shift()
+        entries.shift()
+
+        for(item in entries) { 
+
+          $.ajax({
+            url: "/api/groups",
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ 
+              username: entries[item],
+              group_number: group_id
+            }),
+            statusCode: { 401: function() { logout() } }
+          })
+          .done(function(data, statusText, xhr) {
+            getGroups()
+          })
+
+        }
+      }
+
+    })
+
+  }
+
+  function getGroups() {
+
+    $.ajax({
+      url: "/api/groups",
+      method: "GET",
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+
+      $("#tableBody").empty();
+
+      for (var group in data) {
+        for (var student in data[group]) {
+          console.log(student)
+          var html = `<tr><td>${data[group][student].name}</td><td>${data[group][student].email}</td><td>${group.split('-')[1]}</td><td><button id='${data[group][student].name}-${group.split('-')[1]}' type='button' class='btn btn-block btn-danger' onClick='return removeFromGroup("${data[group][student].name}", ${group.split('-')[1]});'>Remove</button></td></tr>`;
+          $("#tableBody").append(html);
+        }
+      }
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not retrieve student list.", "Error (" + xhr.status + ")")
+    });
+  }
+
+  function addToGroup(sid, gid) {
+
+    $("#buttonAdd").attr("disabled", true);
+
+    $.ajax({
+      url: "/api/groups",
+      method: "POST",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({ 
+        username: sid,
+        group_number: gid
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully added student to Group" + gid + "! It may take a few moments for them to show up.", "Success")
+      getGroups()
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not add student " + sid + " to Group " + gid + ".", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#buttonAdd").removeAttr("disabled");
+    })
+  }
+
+  function removeFromGroup(sid, gid) {
+
+    $("#" + sid + '-' + gid).attr("disabled", true);
+
+    $.ajax({
+      url: "/api/groups",
+      method: "DELETE",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({  
+        username: sid,
+        group_number: gid
+      }),
+      statusCode: { 401: function() { logout() } }
+    })
+    .done(function(data, statusText, xhr) {
+      toastr.success("Successfully removed student from group!", "Success")
+      getGroups();
+    })
+    .fail(function(xhr, statusText) {
+      toastr.error("Could not remove student " + sid + " from Group " + gid + ".", "Error (" + xhr.status + ")")
+    })
+    .always(function() {
+      $("#" + sid + '-' + gid).removeAttr("disabled");
+    })
+  }
+
+</script>
+
+
+</body>
+</html>
