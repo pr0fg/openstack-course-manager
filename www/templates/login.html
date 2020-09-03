@@ -64,7 +64,6 @@
 
 <!-- Base JS -->
 {% include "_base_js.html" %}
-{% include "_base_custom_js.html" %}
 
 <!-- Extra JS -->
 <script>
@@ -89,7 +88,7 @@
       statusCode: {
         200: function(data) {
           var new_exp = new Date(new Date().getTime() + data.token.expires * 1000);
-          Cookies.set(data.token.name, data.token.value, { expires: new_exp, path: '', sameSite: 'Strict' , secure: true })
+          Cookies.set(data.token.name, data.token.value, { expires: new_exp, path: '/manage', path: '' , secure: true })
           window.location.href = 'index.html'
         },
         401: function() {

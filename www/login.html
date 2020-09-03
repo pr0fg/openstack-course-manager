@@ -82,8 +82,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha512-kBFfSXuTKZcABVouRYGnUo35KKa1FBrYgwG4PAx7Z2Heroknm0ca2Fm2TosdrrI356EDHMW383S3ISrwKcVPUw==" crossorigin="anonymous"></script>
 <!-- Toastr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous"></script>
-<!-- OSCM -->
-<script src="js/oscm.js"></script>
 
 <!-- Extra JS -->
 <script>
@@ -108,7 +106,7 @@
       statusCode: {
         200: function(data) {
           var new_exp = new Date(new Date().getTime() + data.token.expires * 1000);
-          Cookies.set(data.token.name, data.token.value, { expires: new_exp, path: '', sameSite: 'Strict' , secure: true })
+          Cookies.set(data.token.name, data.token.value, { expires: new_exp, path: '/manage', path: '' , secure: true })
           window.location.href = 'index.html'
         },
         401: function() {
