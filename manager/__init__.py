@@ -1131,6 +1131,24 @@ class OpenStackCourseManager():
         return False
 
     # ------------------------------------------------------------------------
+    # Public Email Functions
+
+    @requires_course_code
+    @requires_instructor_or_student
+    def send_password_reset_request_email(self, course_code, username, token,
+                                          **kwargs):
+
+        user = kwargs.get('user')
+        file = open('manager/templates/email/password_reset_request.template')
+
+        message = file.read().format(
+            course_manager_url=Config.COURSE_MANAGER_URL,
+            token=token)
+
+        logging.info(f'Sent password reset request email to {user.email}')
+        self._send_email(user.email, message)
+
+    # ------------------------------------------------------------------------
     # Internal Email Functions
 
     def _send_password_reset_email(self, user, plaintext_password):

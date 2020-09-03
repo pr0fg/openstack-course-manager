@@ -15,6 +15,7 @@ from config import Config
 
 manager = OpenStackCourseManager(debug=Config.DEBUG)
 sessions = ExpiringDict(Config.SESSION_TIMEOUT)
+reset_tokens = ExpiringDict(Config.SESSION_TIMEOUT)
 logger = get_task_logger(__name__)
 
 
@@ -121,11 +122,12 @@ def task_queued():
 # -----------------------------------------------------------------------------
 # Authentication Methods
 
-def get_token(course_code):
+def get_token(course_code=None):
     token = ''.join(random.choice(
         string.ascii_uppercase + string.ascii_lowercase + string.digits)
         for _ in range(64))
-    sessions[token] = course_code
+    if course_code:
+        sessions[token] = course_code
     return token
 
 
@@ -142,7 +144,7 @@ def revoke_token(token):
 
 
 # -----------------------------------------------------------------------------
-# API Views
+# Public API Views
 
 
 class CheckToken(Resource):
@@ -176,6 +178,42 @@ class Login(Resource):
         else:
             abort(401, message='Login failed')
 
+
+class PasswordResetRequest(Resource):
+
+    def get(self, course_code, username):
+
+        course_users = manager.get_users(course_code, instructors=True,
+                                         students=True)
+        if course_users and (
+                username in course_users['instructors'] or
+                username in course_users['students']):
+
+            token = get_token()
+            reset_tokens[token] = [course_code, username]
+            manager.send_password_reset_request_email(
+                course_code, username, token)
+
+        return parse_result(True)
+
+
+class PasswordResetConfirm(Resource):
+
+    def get(self, token):
+
+        if token not in reset_tokens.keys():
+            return parse_result(False)
+
+        else:
+            course_code = reset_tokens[token][0]
+            username = reset_tokens[token][1]
+            del reset_tokens[token]
+            return parse_result(
+                manager.set_password(course_code, username))
+
+
+# -----------------------------------------------------------------------------
+# Authenticated API Views
 
 class Logout(Resource):
 
@@ -402,9 +440,15 @@ class Images(Resource):
         return task_queued()
 
 
-# Endpoints
+# Public Endpoints
 api.add_resource(CheckToken, '/api/token')
 api.add_resource(Login, '/api/login')
+api.add_resource(PasswordResetRequest,
+                 '/api/public/reset/<string:course_code>/<string:username>')
+api.add_resource(PasswordResetConfirm,
+                 '/api/public/reset/<string:token>')
+
+# Authenticated Endpoints
 api.add_resource(Logout, '/api/logout')
 api.add_resource(PasswordReset, '/api/users/<string:username>/reset')
 api.add_resource(Settings, '/api/settings')
