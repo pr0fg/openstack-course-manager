@@ -12,9 +12,6 @@ function check_cookie() {
     statusCode: {
       401: function() {
         logout()
-      },
-      200: function() {
-        window.location.href = 'index.html'
       }
     }
   })
