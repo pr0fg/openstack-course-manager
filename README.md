@@ -66,7 +66,7 @@ You should probably register this as a system service...
 
 ### Web Assets
 
-This web panel is designed to integrate with the OpenStack Course Manager's API system. All paths are relative, so you should be able to use this on any domain as long as the API endpoint is on the same domain under `/manage/api`.
+This web panel is designed to integrate with the OpenStack Course Manager's API system. All paths are relative, so you should be able to use this on any domain as long as the API endpoint is on the same domain under `/api`.
 
 You can generate static assets by modifying the Jinja2 templates under `www/templates`. Then simply run `staticjinja build` to generate the new assets.
 

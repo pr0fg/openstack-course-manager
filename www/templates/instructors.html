@@ -94,7 +94,7 @@
     $("#reset-" + id.replace(/\./g,'')).attr("disabled", true);
 
     $.ajax({
-      url: "/manage/manage/api/users/" + id + "/reset",
+      url: "/api/users/" + id + "/reset",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -112,7 +112,7 @@
   function getInstructors() {
 
     $.ajax({
-      url: "/manage/manage/api/instructors",
+      url: "/api/instructors",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -142,7 +142,7 @@
     $("#buttonAdd").attr("disabled", true);
 
     $.ajax({
-      url: "/manage/manage/api/instructors",
+      url: "/api/instructors",
       method: "POST",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
@@ -168,7 +168,7 @@
     $("#remove-" + id.replace(/\./g,'')).attr("disabled", true);
 
     $.ajax({
-      url: "/manage/manage/api/instructors",
+      url: "/api/instructors",
       method: "DELETE",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({  

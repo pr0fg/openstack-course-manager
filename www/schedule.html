@@ -371,7 +371,7 @@
   function getSchedule() {
 
     $.ajax({
-      url: "/manage/api/schedule",
+      url: "/api/schedule",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -406,7 +406,7 @@
     $("#buttonAdd").attr("disabled", true);
 
     $.ajax({
-      url: "/manage/api/schedule",
+      url: "/api/schedule",
       method: "POST",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
@@ -435,7 +435,7 @@
     $("#" + id).attr("disabled", true);
 
     $.ajax({
-      url: "/manage/api/schedule",
+      url: "/api/schedule",
       method: "DELETE",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
@@ -458,7 +458,7 @@
 
   function getSettings() {
       $.ajax({
-        url: "/manage/api/settings",
+        url: "/api/settings",
         method: "GET",
         statusCode: { 401: function() { logout() } }
       })
@@ -476,7 +476,7 @@
     $("#weekend").bootstrapSwitch('disabled', true);
 
     $.ajax({
-      url: "/manage/api/settings",
+      url: "/api/settings",
       method: "PATCH",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(data),

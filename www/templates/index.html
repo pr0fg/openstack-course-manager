@@ -109,7 +109,7 @@
 
   function getStats() {
     $.ajax({
-      url: "/manage/api/stats",
+      url: "/api/stats",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })

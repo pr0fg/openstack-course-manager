@@ -211,7 +211,7 @@
         for(item in entries) { 
 
           $.ajax({
-            url: "/manage/api/groups",
+            url: "/api/groups",
             method: "POST",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ 
@@ -234,7 +234,7 @@
   function getGroups() {
 
     $.ajax({
-      url: "/manage/api/groups",
+      url: "/api/groups",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -265,7 +265,7 @@
     $("#buttonAdd").attr("disabled", true);
 
     $.ajax({
-      url: "/manage/api/groups",
+      url: "/api/groups",
       method: "POST",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
@@ -291,7 +291,7 @@
     $("#" + sid + '-' + gid).attr("disabled", true);
 
     $.ajax({
-      url: "/manage/api/groups",
+      url: "/api/groups",
       method: "DELETE",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({  
