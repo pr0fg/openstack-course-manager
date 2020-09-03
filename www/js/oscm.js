@@ -31,7 +31,7 @@ function logout() {
     url: '/api/logout',
   })
   .always(function(data) {
-    Cookies.remove('oscm', { path: '/manage' })
+    Cookies.remove('oscm', { path: '' })
     window.location.href = 'login.html'
   })
 
