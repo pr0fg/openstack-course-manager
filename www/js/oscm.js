@@ -4,8 +4,6 @@ $( document ).ready(function() {
 
 function check_cookie() {
 
-  var page = location.href.split("/").slice(-1)[0]
-
   $.ajax({
     type: 'GET',
     url: '/api/public/token',
@@ -28,7 +26,7 @@ function logout() {
     url: '/api/logout',
   })
   .always(function(data) {
-    Cookies.remove('oscm', { path: '' })
+    document.cookie = "oscm=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/; secure; samesite=strict";
     window.location.href = 'login.html'
   })
 

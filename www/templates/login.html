@@ -88,7 +88,8 @@
       statusCode: {
         200: function(data) {
           var new_exp = new Date(new Date().getTime() + data.token.expires * 1000);
-          Cookies.set(data.token.name, data.token.value, { expires: new_exp })
+          var expires = "expires=" + new_exp.toUTCString();
+          document.cookie = "oscm=" + data.token.value + "; " + expires + "; path=/; secure; samesite=strict";
           window.location.href = 'index.html'
         },
         401: function() {
