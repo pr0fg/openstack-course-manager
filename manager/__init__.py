@@ -152,7 +152,7 @@ class OpenStackCourseManager():
         else:
             cloud = openstack.connect(cloud='envvars')
 
-        logging.info(f'Cloud connection established')
+        logging.debug(f'Cloud connection established')
 
         try:
             cloud.authorize()
@@ -245,7 +245,7 @@ class OpenStackCourseManager():
                 kwargs.get('course_project'),
                 description=json.dumps(Config.DEFAULT_COURSE_SETTINGS))
 
-            logging.info(f'{course_code}: Repaired settings')
+            logging.debug(f'{course_code}: Repaired settings')
 
             return Config.DEFAULT_COURSE_SETTINGS
 
@@ -292,7 +292,8 @@ class OpenStackCourseManager():
                 description='Auto-generated Project' if not instructor
                 else json.dumps(Config.DEFAULT_COURSE_SETTINGS),
                 parent_id=parent_id if parent_id else None,
-                domain_id=Config.OS_DOMAIN_ID
+                domain_id=Config.OS_DOMAIN_ID,
+                enabled=True if instructor else False
             )
 
             logging.info(f'{course_code}: Created new project \
@@ -328,10 +329,10 @@ class OpenStackCourseManager():
         )
 
         if user and create:
-            logging.info(f'User already exists globally: {username}')
+            logging.debug(f'User already exists globally: {username}')
 
         if not user and not create:
-            logging.info(f'User does not exist: {username}')
+            logging.debug(f'User does not exist: {username}')
 
         if not user and create:
 
@@ -339,7 +340,7 @@ class OpenStackCourseManager():
                     not len(email.split('@')) == 2 or \
                     not email.split('@')[1] in Config.EMAIL_DOMAINS:
 
-                logging.info(f'Invalid email: {email}')
+                logging.debug(f'Invalid email: {email}')
 
             else:
 
@@ -362,7 +363,7 @@ class OpenStackCourseManager():
 
         result = self._cloud.get_image(image_name_or_id)
         if not result:
-            logging.info(f'Image not found: {image_name_or_id}')
+            logging.debug(f'Image not found: {image_name_or_id}')
 
         return result
 
@@ -378,14 +379,14 @@ class OpenStackCourseManager():
         if course_settings['weekend'].lower() == 'true' and \
                 datetime.now().weekday() >= 5:
 
-            logging.info(f'Weekend access enabled for course')
+            logging.debug(f'Weekend access enabled for course')
             return True
 
         elif weekday in course_settings['schedule'].keys():
 
             for schedule in course_settings['schedule'][weekday]:
 
-                logging.info(f'Found schedule: {schedule}')
+                logging.debug(f'Found schedule: {schedule}')
 
                 start_time = time(
                     int(schedule.split(':')[0]),
@@ -398,14 +399,14 @@ class OpenStackCourseManager():
                 )
 
                 if start_time <= datetime.now().time() <= end_time:
-                    logging.info('Course currently scheduled')
+                    logging.debug('Course currently scheduled')
                     return True
                 else:
-                    logging.info('Course not currently scheduled')
+                    logging.debug('Course not currently scheduled')
                     return False
 
         else:
-            logging.info('Course not currently scheduled')
+            logging.debug('Course not currently scheduled')
             return False
 
     def _get_vms(self, course_code, students=False, groups=False,
@@ -421,7 +422,7 @@ class OpenStackCourseManager():
             for server in self._cloud.compute.servers(
                     project_id=project.id, all_projects=True):
 
-                logging.info(f'{course_code}: Found VM {server.name}')
+                logging.debug(f'{course_code}: Found VM {server.name}')
 
                 if project_dict:
                     if project.name not in servers_as_project_dict:
@@ -497,7 +498,7 @@ class OpenStackCourseManager():
     def set_quota(self, course_code, students=False, groups=False, **kwargs):
 
         if not (students or groups):
-            logging.info('Must specify students or groups when setting quota')
+            logging.debug('Must specify students or groups when setting quota')
             return False
 
         student_quota, group_quota = \
@@ -511,7 +512,7 @@ class OpenStackCourseManager():
             for project in self._get_group_projects(course_code):
                 self._set_project_quota(course_code, project, group_quota)
 
-        logging.info(f'{course_code}: Updated quotas')
+        logging.debug(f'{course_code}: Updated quotas')
         return True
 
     @requires_course_code
@@ -521,27 +522,49 @@ class OpenStackCourseManager():
         if project:
             if not project.is_enabled == enabled:
                 self._cloud.identity.update_project(project, enabled=enabled)
-                logging.info(f'{course_code}: Updated project access for {project.name}:\
+                logging.debug(f'{course_code}: Updated project access for {project.name}:\
                     {enabled}')
                 return True
             else:
                 return False
 
+        course_settings = self.get_settings(course_code)
+
         if students:
-            for project in self._get_student_projects(course_code):
-                if not project.is_enabled == enabled:
-                    self._cloud.identity.update_project(
-                        project, enabled=enabled)
-                    logging.info(f'{course_code}: Updated project access for {project.name}:\
-                        {enabled}')
+
+            if enabled:
+
+                for project in self._get_student_projects(course_code):
+                    if not project.is_enabled:
+                        self._cloud.identity.update_project(project,
+                                                            enabled=True)
+                if course_settings['keep']:
+                    self._unshelve_vms(course_code, students=True)
+
+            else:
+
+                if not course_settings['keep']:
+                    self.remove_student_vms(course_code)
+                else:
+                    self._shelve_vms(course_code, students=True)
+
+                for project in self._get_student_projects(course_code):
+                    if project.is_enabled:
+                        self._cloud.identity.update_project(project,
+                                                            enabled=False)
 
         if groups:
+
+            if not enabled:
+                self._shelve_vms(course_code, groups=True)
+
             for project in self._get_group_projects(course_code):
                 if not project.is_enabled == enabled:
                     self._cloud.identity.update_project(
                         project, enabled=enabled)
-                    logging.info(f'{course_code}: Updated project access for {project.name}:\
-                        {enabled}')
+
+        logging.debug(f'{course_code}: Updated project access for {course_code}:\
+                     {enabled}')
 
         return True
 
@@ -568,7 +591,7 @@ class OpenStackCourseManager():
     def add_course(self, course_code):
 
         if course_code in self.courses:
-            logging.info(f'{course_code}: Course already exists')
+            logging.debug(f'{course_code}: Course already exists')
             return False
 
         self._get_project(course_code, f'{course_code}-Instructors',
@@ -606,7 +629,7 @@ class OpenStackCourseManager():
             if not int(group_number) > 0:
                 raise ValueError()
         except ValueError:
-            logging.info(f'{course_code}: Invalid group number: \
+            logging.debug(f'{course_code}: Invalid group number: \
                 {group_number}')
             return False
 
@@ -677,7 +700,7 @@ class OpenStackCourseManager():
         )
 
         if not result:
-            logging.info(f'{course_code}: User {user.name} already in \
+            logging.debug(f'{course_code}: User {user.name} already in \
                 {project.name}')
             return False
 
@@ -726,7 +749,7 @@ class OpenStackCourseManager():
 
         project = self._get_project(course_code, project_name)
         if not project:
-            logging.info(f'{course_code}: {username} not enrolled in course')
+            logging.debug(f'{course_code}: {username} not enrolled in course')
             return False
 
         user = self._get_user(username)
@@ -757,7 +780,7 @@ class OpenStackCourseManager():
         if result:
             logging.info(f'{course_code}: Removed Group-{group_number}')
         else:
-            logging.info(f'{course_code}: Invalid group: {group_number}')
+            logging.debug(f'{course_code}: Invalid group: {group_number}')
 
         return result
 
@@ -803,48 +826,66 @@ class OpenStackCourseManager():
     def remove_student_snapshots(self, course_code, **kwargs):
 
         if self.get_settings(course_code)['snapshots']:
-            logging.info(f'{course_code}: Can\'t remove snapshots: \
-                course has snapshotting enabled')
             return False
 
         for image in self.get_images(course_code)['student']:
 
             project = self._get_project(course_code, image.owner)
-            scoped = self._cloud.connect_as_project(project.name)
 
-            result = scoped.delete_image(image.id, wait=True)
+            access_toggled = self.set_access(
+                    course_code,
+                    project=project,
+                    enabled=True
+            )
+
+            scoped = self._cloud.connect_as_project(project.name)
+            result = scoped.delete_image(image.id, wait=False)
 
             if result:
-                logging.info(f'{course_code}: Removed snapshot {image.name} \
+                logging.debug(f'{course_code}: Removed snapshot {image.name} \
                     from {project.name}')
             else:
                 logging.error(f'{course_code}: Failed to remove rogue snapshot \
                     {image.id} from {project.name}')
+
+            if access_toggled:
+                self.set_access(course_code, project=project,
+                                enabled=False)
 
         return True
 
     @requires_course_code
     def remove_student_vms(self, course_code, **kwargs):
 
-        if self.get_settings(course_code)['keep'].lower() == 'true':
-            logging.info(f'{course_code}: Can\'t remove student VMs: \
+        if self.get_settings(course_code)['keep']:
+            logging.debug(f'{course_code}: Can\'t remove student VMs: \
                 course has saved VMs enabled')
             return False
 
         for server in self._get_vms(course_code, students=True):
 
             project = self._get_project(course_code, server.project_id)
-            scoped = self._cloud.connect_as_project(project.name)
 
+            access_toggled = self.set_access(
+                    course_code,
+                    project=project,
+                    enabled=True
+            )
+
+            scoped = self._cloud.connect_as_project(project.name)
             result = scoped.delete_server(server.name, delete_ips=True,
                                           wait=True)
 
             if result:
-                logging.info(f'{course_code}: Deleted student VM \
+                logging.debug(f'{course_code}: Deleted student VM \
                     {server.name}')
             else:
                 logging.error(f'{course_code}: Failed to delete student VM \
                     "{server.name}"')
+
+            if access_toggled:
+                self.set_access(course_code, project=project,
+                                enabled=False)
 
         return True
 
@@ -891,7 +932,7 @@ class OpenStackCourseManager():
         image = kwargs.get('image')
 
         if not image.visibility == 'private':
-            logging.info(f'{course_code}: \
+            logging.debug(f'{course_code}: \
                 Invalid image or image status for {image.id}')
             return False
 
@@ -915,7 +956,7 @@ class OpenStackCourseManager():
 
                 try:
                     course.image.add_member(image.id, member_id=project.id)
-                    logging.info(f'{course_code}: Shared image {image.name} with \
+                    logging.debug(f'{course_code}: Shared image {image.name} with \
                         {project.name}')
                 except Exception as e:
                     logging.error(f'{course_code}: Sharing image {image.name} with \
@@ -934,7 +975,7 @@ class OpenStackCourseManager():
                             image.id,
                             status='accepted'
                     )
-                    logging.info(f'{course_code}: Accepted {image.name} \
+                    logging.debug(f'{course_code}: Accepted {image.name} \
                     for {project.name}')
 
                 except Exception as e:
@@ -957,24 +998,23 @@ class OpenStackCourseManager():
         image = kwargs.get('image')
 
         if not image.visibility == 'shared':
-            logging.info(f'{course_code}: \
+            logging.debug(f'{course_code}: \
                 Invalid image or image status for {image.id}')
             return False
 
         course = self._cloud.connect_as_project(f'{course_code}-Instructors')
 
-        for item in course.image.members(image):
-            if item['status'] == 'accepted':
+        for item in self._cloud.image.members(image.id):
 
-                try:
-                    member_id = item['member_id']
-                    course.image.remove_member(member_id, image)
-                    logging.debug(f'Removed access to image {image.name} \
-                        for {member_id}')
+            try:
+                member_id = item['member_id']
+                course.image.remove_member(member_id, image.id)
+                logging.debug(f'Removed access to image {image.name} \
+                    for {member_id}')
 
-                except Exception as e:
-                    logging.debug(f'Failed to remove access to image {image.name} \
-                        for {member_id}: {e}')
+            except Exception as e:
+                logging.error(f'Failed to remove access to image {image.name} \
+                    for {member_id}: {e}')
 
         try:
             course.image.update_image(image, visibility='private')
@@ -990,14 +1030,9 @@ class OpenStackCourseManager():
     # Public Shelve Functions
 
     @requires_course_code
-    def shelve_vms(self, course_code, students=False, groups=False, **kwargs):
+    def _shelve_vms(self, course_code, students=False, groups=False, **kwargs):
 
-        if self.get_settings(course_code)['keep'].lower() == 'false':
-            logging.info(f'{course_code}: Can\'t shelve VMs: \
-                course has saved VMs disabled')
-            return False
-
-        logging.info(f'{course_code}: Shelving VMs \
+        logging.debug(f'{course_code}: Shelving VMs \
             (students: {students}, groups: {groups})')
 
         for server in self._get_vms(course_code, students=students,
@@ -1020,16 +1055,16 @@ class OpenStackCourseManager():
             if access_toggled:
                 self.set_access(course_code, project=project, enabled=False)
 
-            logging.info(f'{course_code}: Shelved VM {server.name}')
+            logging.debug(f'{course_code}: Shelved VM {server.name}')
 
-        logging.info(f'{course_code}: Finished shelving VMs')
+        logging.debug(f'{course_code}: Finished shelving VMs')
         return True
 
     @requires_course_code
-    def unshelve_vms(self, course_code, students=False, groups=False,
-                     **kwargs):
+    def _unshelve_vms(self, course_code, students=False, groups=False,
+                      **kwargs):
 
-        logging.info(f'{course_code}: Unshelving VMs \
+        logging.debug(f'{course_code}: Unshelving VMs \
             (students: {students}, groups: {groups})')
 
         for server in self._get_vms(course_code, students=students,
@@ -1042,9 +1077,9 @@ class OpenStackCourseManager():
             scoped = self._cloud.connect_as_project(project.name)
 
             scoped.compute.unshelve_server(server)
-            logging.info(f'{course_code}: Unshelved VM {server.name}')
+            logging.debug(f'{course_code}: Unshelved VM {server.name}')
 
-        logging.info(f'{course_code}: Finished unshelving VMs')
+        logging.debug(f'{course_code}: Finished unshelving VMs')
         return True
 
     # ------------------------------------------------------------------------
@@ -1053,7 +1088,7 @@ class OpenStackCourseManager():
     @requires_course_code
     def is_running(self, course_code, **kwargs):
 
-        weekday = datetime.now().strftime('%a')
+        weekday = str(int(datetime.now().strftime('%w')) - 1)
         course_settings = self.get_settings(course_code)
 
         if 'weekend' not in course_settings.keys() or \
@@ -1063,20 +1098,18 @@ class OpenStackCourseManager():
                 kwargs.get('course_project'),
                 description=json.dumps(Config.DEFAULT_COURSE_SETTINGS))
 
-            logging.info(f'{course_code}: Repaired settings')
+            logging.debug(f'{course_code}: Repaired settings')
             return False
 
-        if course_settings['weekend'].lower() == 'true' and \
-                datetime.now().weekday() >= 5:
-
-            logging.info(f'{course_code}: Weekend access enabled for course')
+        if course_settings['weekend'] and datetime.now().weekday() >= 5:
+            logging.debug(f'{course_code}: Weekend access enabled for course')
             return True
 
         elif weekday in course_settings['schedule'].keys():
 
             for schedule in course_settings['schedule'][weekday]:
 
-                logging.info(f'{course_code}: Found schedule: {schedule}')
+                logging.debug(f'{course_code}: Found schedule: {schedule}')
 
                 start_time = time(
                     int(schedule.split(':')[0]),
@@ -1089,15 +1122,13 @@ class OpenStackCourseManager():
                 )
 
                 if start_time <= datetime.now().time() <= end_time:
-                    logging.info(f'{course_code}: Course currently scheduled')
+                    logging.debug(f'{course_code}: Course currently scheduled')
                     return True
                 else:
-                    logging.info(f'{course_code}: Course not scheduled')
+                    logging.debug(f'{course_code}: Course not scheduled')
                     return False
 
-        else:
-            logging.info(f'{course_code}: Course not scheduled')
-            return False
+        return False
 
     # ------------------------------------------------------------------------
     # Internal Email Functions

@@ -175,25 +175,48 @@
       <div class="container-fluid">
 
       
-<div class="callout callout-danger">
-  <h5>Predeploy Functionality</h5>
-  <p>If VMs are not deleted between lecture/lab periods, student VMs will be placed back in their account before the next period. This will continue to happen until this functionality is disabled.</p>
-  <p><strong>Please only enable this setting if you absolutely need to!</strong> Usually it is adequate to have students redeploy their VMs each lab - this saves significant resources.</p>
-</div>
-
-<div class="card card-default">
-  <div class="card-header">
-    <h3 class="card-title"><i class="fas fa-trash mr-2"></i>Retain Student VMs Between Classes/Labs:</h3>
-  </div>
-  <div class="card-body">
-    <input id="vms" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+<div class="row">
+  <div class="col-12">
+    <div class="callout callout-danger">
+      <h5>Predeploy Functionality</h5>
+      <p>If VMs are not deleted between lecture/lab periods, student VMs will be placed back in their account before the next period. This will continue to happen until this functionality is disabled.</p>
+      <p><strong>Please only enable the settings below if you absolutely need to!</strong> Usually it is adequate to have students redeploy their VMs each lab - this saves significant resources.</p>
+    </div>
   </div>
 </div>
 
-<div class="callout callout-warning">
-  <h5>Group Functionality</h5>
-  <p>Note that group VMs will never be deleted, only retained.</p>
+<div class="row">
+  <div class="col-12">
+    <div class="callout callout-warning">
+      <h5>Group Functionality</h5>
+      <p>Note that group VMs and snapshots will never be deleted, only retained.</p>
+    </div>
+  </div>
 </div>
+
+<div class="row">
+  <div class="col-6">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-trash mr-2"></i>Retain Student VMs:</h3>
+      </div>
+      <div class="card-body">
+        <input id="vms" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card card-default">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-user mr-2"></i>Allow Student Snapshots:</h3>
+      </div>
+      <div class="card-body">
+        <input id="snapshots" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
       </div><!-- /.container-fluid -->
@@ -236,7 +259,11 @@
     });
 
     $("#vms").on('switchChange.bootstrapSwitch', function(event, state) {
-       updateSetting({'keep': state});
+       updateSetting('vms', {'keep': state});
+    });
+
+    $("#snapshots").on('switchChange.bootstrapSwitch', function(event, state) {
+       updateSetting('snapshots', {'snapshots': state});
     });
 
     getSettings();
@@ -252,15 +279,17 @@
       .done(function(data, statusText, xhr) {
         $("#vms").bootstrapSwitch('disabled', false);
         $("#vms").bootstrapSwitch('state', data.keep, true)
+        $("#snapshots").bootstrapSwitch('disabled', false);
+        $("#snapshots").bootstrapSwitch('state', data.snapshots, true)
       })
       .fail(function(xhr, statusText) {
         toastr.error("Could not retrieve course settings.", "Error (" + xhr.status + ")")
       })
   }
 
-  function updateSetting(data) {
+  function updateSetting(id, data) {
 
-    $("#vms").bootstrapSwitch('disabled', true);
+    $("#" + id).bootstrapSwitch('disabled', true);
 
     $.ajax({
       url: "/api/settings",

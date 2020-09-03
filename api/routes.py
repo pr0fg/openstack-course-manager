@@ -5,8 +5,9 @@ import string
 
 from flask import request, send_from_directory
 from flask_restful import Resource, abort, wraps, reqparse
-from expiring_dict import ExpiringDict
+from celery.schedules import crontab
 from celery.utils.log import get_task_logger
+from expiring_dict import ExpiringDict
 
 from api import app, api, celery
 from manager import OpenStackCourseManager
@@ -24,12 +25,65 @@ logger = get_task_logger(__name__)
 def celery_wrapper(function_name, *args, **kwargs):
     logger.info(f'Received task name: {function_name}')
     method_to_call = getattr(manager, function_name)
-    result = method_to_call(*args, **kwargs)
-    return {'result': result}
+    return method_to_call(*args, **kwargs)
+
+
+# -----------------------------------------------------------------------------
+# Celery Periodic Tasks
+
+@celery.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+
+    sender.add_periodic_task(
+        crontab(hour='*', minute='*/3', day_of_week='*'),
+        cron_enforce_acl_policy.s(),
+        name='Enforce ACL Policies'
+    )
+
+    sender.add_periodic_task(
+        crontab(hour=1, minute=0, day_of_week='*'),
+        cron_enforce_quota_policy.s(),
+        name='Enforce Quota Policies'
+    )
+
+    sender.add_periodic_task(
+        crontab(hour=2, minute=0, day_of_week='*'),
+        cron_student_vm_reaper.s(),
+        name='Student VM Reaper'
+    )
+
+    sender.add_periodic_task(
+        crontab(hour=3, minute=0, day_of_week='*'),
+        cron_student_snapshot_reaper.s(),
+        name='Student Snapshot Reaper'
+    )
+
 
 @celery.task
-def test():
-    return 'Test OK'
+def cron_enforce_acl_policy():
+    for course_code in manager.courses:
+        is_running = manager.is_running(course_code)
+        manager.set_access(course_code, students=True, groups=True,
+                           enabled=is_running)
+
+
+@celery.task
+def cron_enforce_quota_policy():
+    for course_code in manager.courses:
+        manager.set_quota(course_code, students=True, groups=True)
+
+
+@celery.task
+def cron_student_vm_reaper():
+    for course_code in manager.courses:
+        manager.remove_student_vms(course_code)
+
+
+@celery.task
+def cron_student_snapshot_reaper():
+    for course_code in manager.courses:
+        manager.remove_student_snapshots(course_code)
+
 
 # -----------------------------------------------------------------------------
 # Decorators
@@ -46,19 +100,6 @@ def requires_token(func):
             abort(401, message='Invalid token')
 
         return func(*args, **kwargs, course_code=course_code, token=token)
-
-    return decorated
-
-
-def requires_cron_token(func):
-
-    @wraps(func)
-    def decorated(*args, **kwargs):
-
-        if not request.cookies.get('OSCM_TOKEN') == Config.CRON_TOKEN:
-            abort(401, message='Invalid cron token')
-
-        return func(*args, **kwargs)
 
     return decorated
 
@@ -353,38 +394,10 @@ class Images(Resource):
         parser.add_argument('shared', type=bool, required=True)
         args = parser.parse_args()
 
-        test.delay()
-
         celery_wrapper.delay(
             'share_image' if args['shared'] else 'unshare_image',
             kwargs.get('course_code'),
             args['image'])
-
-        return task_queued()
-
-
-class Cron(Resource):
-
-    @requires_cron_token
-    def get(self, **kwargs):
-
-        for course_code in manager.courses:
-
-            is_running = manager.is_running(course_code)
-
-            if is_running:
-                celery_wrapper.delay(
-                    'set_access',
-                    course_code,
-                    students=True,
-                    groups=True,
-                    enabled=True)
-
-            else:
-                celery_wrapper.delay('remove_student_vms', course_code)
-                celery_wrapper.delay('shelve_vms', course_code)
-                celery_wrapper.delay('set_access', course_code, students=True,
-                                     groups=True, enabled=False)
 
         return task_queued()
 
@@ -402,7 +415,6 @@ api.add_resource(Instructors, '/api/instructors')
 api.add_resource(Students, '/api/students')
 api.add_resource(Groups, '/api/groups')
 api.add_resource(Images, '/api/images')
-api.add_resource(Cron, '/api/cron')
 
 
 # For debugging or development purposes only!

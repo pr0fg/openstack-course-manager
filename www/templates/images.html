@@ -11,6 +11,15 @@
 
 {% block content %}
 <div class="row">
+  <div class="col-12">
+    <div class="callout callout-warning">
+      <h4>Important Note</h4>
+      <p class="mb-1">Once you share/unshare an image, it may take quite a few minutes for the change to be processed. Please wait and don't click the button again.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
 
   <div class="col-6">
     <div class="card">
@@ -57,6 +66,7 @@
   $(function () {
 
     getImages()
+    setTimeout(getImages, 10000)
 
   })
 
@@ -71,12 +81,12 @@
 
       $("#tableBodyPrivateImages").empty();
       for (var image in data.private) {
-        var html = `<tr><td>${data.private[image].name}</td><td><button type='button' id='${data.private[image].id}' class='btn btn-danger btn-sm float-right' onClick='return shareImage("${data.private[image].id}", true);'>Share with Class</button></td></tr>`;
+        var html = `<tr><td>${data.private[image].name}</td><td><button type='button' id='${data.private[image].id}' class='btn btn-danger btn-sm float-right' onClick='return shareImage("${data.private[image].id}", true);'>Share</button></td></tr>`;
         $("#tableBodyPrivateImages").append(html);
       }
       $("#tableBodySharedImages").empty();
       for (var image in data.shared) {
-        var html = `<tr><td>${data.shared[image].name}</td><td><button type='button' id='${data.shared[image].id}' class='btn btn-danger btn-sm float-right' onClick='return shareImage("${data.shared[image].id}", false);'>Share with Class</button></td></tr>`;
+        var html = `<tr><td>${data.shared[image].name}</td><td><button type='button' id='${data.shared[image].id}' class='btn btn-danger btn-sm float-right' onClick='return shareImage("${data.shared[image].id}", false);'>Unshare</button></td></tr>`;
         $("#tableBodySharedImages").append(html);
       }
 
@@ -101,8 +111,8 @@
       cache: false
     })
     .done(function(data, statusText, xhr) {
-      toastr.success("Successfully updated image setting! It may take a few moments for this change to show up.", "Success")
-      setTimeout(getImages, 10000)
+      toastr.success("Successfully updated image setting! It may take a few minutes for this change to show up.", "Success")
+      setTimeout(getImages, 15000)
     })
     .fail(function(xhr, statusText) {
       toastr.error("Could not update image setting.", "Error (" + xhr.status + ")")

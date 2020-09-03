@@ -1,8 +1,6 @@
 # OpenStack Course Manager  Copyright (C) 2020  Garrett Hayes
 
 import os
-import string
-import random
 from os.path import join, dirname
 
 from dotenv import load_dotenv
@@ -13,7 +11,7 @@ load_dotenv(dotenv_path)
 
 class Config(object):
 
-    DEBUG = True if os.getenv('DEBUG') == '1' else False
+    DEBUG = True
 
     # OpenStack Additional Requirements
     OS_DOMAIN_ID = os.getenv('OS_DOMAIN_ID')
@@ -29,12 +27,8 @@ class Config(object):
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL')
 
     # General Settings
-    CRON_TOKEN = ''.join(random.choice(
-                 string.ascii_uppercase+string.ascii_lowercase+string.digits)
-                 for _ in range(64))
-
-    SESSION_TIMEOUT = int(os.getenv('SESSION_TIMEOUT')) \
-        if os.getenv('SESSION_TIMEOUT') else 3600
+    TIMEZONE = 'America/Toronto'
+    SESSION_TIMEOUT = 3600
 
     # Email Backend
     EMAIL_DOMAINS = os.getenv('EMAIL_DOMAINS').split(',')
