@@ -17,7 +17,7 @@ function check_cookie() {
       },
       200: function() {
         if(page == 'login.html') {
-          window.location.href = '/index.html'
+          window.location.href = 'index.html'
         }
       }
     }
@@ -36,7 +36,7 @@ function logout() {
   })
   .always(function(data) {
     Cookies.remove('oscm', { path: '/' })
-    window.location.href = '/login.html'
+    window.location.href = 'login.html'
   })
 
 }
