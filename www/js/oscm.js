@@ -11,14 +11,10 @@ function check_cookie() {
     url: '/api/public/token',
     statusCode: {
       401: function() {
-        if(page != 'login.html') {
-          logout()
-        }
+        logout()
       },
       200: function() {
-        if(page == 'login.html') {
-          window.location.href = 'index.html'
-        }
+        window.location.href = 'index.html'
       }
     }
   })
