@@ -464,7 +464,7 @@ api.add_resource(Images, '/images')
 
 
 # For debugging or development purposes only!
-if Config.DEBUG and Config.WWW_PATH:
-    @app.route('/<path:filename>')
-    def serve_static(filename):
-        return send_from_directory(Config.WWW_PATH, filename)
+# if Config.DEBUG and Config.WWW_PATH:
+#     @app.route('/<path:filename>')
+#     def serve_static(filename):
+#         return send_from_directory(Config.WWW_PATH, filename)
