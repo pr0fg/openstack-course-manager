@@ -441,24 +441,26 @@ class Images(Resource):
 
 
 # Public Endpoints
-api.add_resource(CheckToken, '/api/token')
-api.add_resource(Login, '/api/login')
-api.add_resource(PasswordResetRequest,
-                 '/api/public/reset/<string:course_code>/<string:username>')
-api.add_resource(PasswordResetConfirm,
-                 '/api/public/reset/<string:token>')
+api.add_resource(CheckToken, '/manage/api/public/token')
+api.add_resource(Login, '/manage/api/public/login')
+api.add_resource(
+    PasswordResetRequest,
+    '/manage/api/public/reset/<string:course_code>/<string:username>')
+api.add_resource(
+    PasswordResetConfirm,
+    '/manage/api/public/reset/<string:token>')
 
 # Authenticated Endpoints
-api.add_resource(Logout, '/api/logout')
-api.add_resource(PasswordReset, '/api/users/<string:username>/reset')
-api.add_resource(Settings, '/api/settings')
-api.add_resource(Stats, '/api/stats')
-api.add_resource(Schedule, '/api/schedule')
-api.add_resource(Quota, '/api/quota')
-api.add_resource(Instructors, '/api/instructors')
-api.add_resource(Students, '/api/students')
-api.add_resource(Groups, '/api/groups')
-api.add_resource(Images, '/api/images')
+api.add_resource(Logout, '/manage/api/logout')
+api.add_resource(PasswordReset, '/manage/api/users/<string:username>/reset')
+api.add_resource(Settings, '/manage/api/settings')
+api.add_resource(Stats, '/manage/api/stats')
+api.add_resource(Schedule, '/manage/api/schedule')
+api.add_resource(Quota, '/manage/api/quota')
+api.add_resource(Instructors, '/manage/api/instructors')
+api.add_resource(Students, '/manage/api/students')
+api.add_resource(Groups, '/manage/api/groups')
+api.add_resource(Images, '/manage/api/images')
 
 
 # For debugging or development purposes only!

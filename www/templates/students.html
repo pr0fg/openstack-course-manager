@@ -201,7 +201,7 @@
         if(csv_course.includes(course) && entries[9].includes('@')) {
 
           $.ajax({
-            url: "/api/students",
+            url: "/manage/api/students",
             method: "POST",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ 
@@ -225,7 +225,7 @@
     $("#reset-" + id).attr("disabled", true);
 
     $.ajax({
-      url: "/api/users/" + id + "/reset",
+      url: "/manage/api/users/" + id + "/reset",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -243,7 +243,7 @@
   function getStudents() {
 
     $.ajax({
-      url: "/api/students",
+      url: "/manage/api/students",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -272,7 +272,7 @@
     $("#buttonAdd").attr("disabled", true);
 
     $.ajax({
-      url: "/api/students",
+      url: "/manage/api/students",
       method: "POST",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
@@ -297,7 +297,7 @@
     $("#remove-" + id).attr("disabled", true);
 
     $.ajax({
-      url: "/api/students",
+      url: "/manage/api/students",
       method: "DELETE",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({  

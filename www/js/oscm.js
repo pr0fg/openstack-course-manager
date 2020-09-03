@@ -8,7 +8,7 @@ function check_cookie() {
 
   $.ajax({
     type: 'GET',
-    url: '/api/token',
+    url: '/manage/api/public/token',
     statusCode: {
       401: function() {
         if(page != 'login.html') {
@@ -32,7 +32,7 @@ function logout() {
 
   $.ajax({
     type: 'GET',
-    url: '/api/logout',
+    url: '/manage/api/logout',
   })
   .always(function(data) {
     Cookies.remove('oscm', { path: '/' })

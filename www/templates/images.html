@@ -73,7 +73,7 @@
   function getImages(wait=0) {
 
     $.ajax({
-      url: "/api/images",
+      url: "/manage/api/images",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -101,7 +101,7 @@
     $("#" + id).attr("disabled", true);
     
     $.ajax({
-      url: "/api/images",
+      url: "/manage/api/images",
       method: "PATCH",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 

@@ -12,7 +12,7 @@ export PIPENV_VENV_IN_PROJECT="enabled"
 pipenv --three install
 ```
 
-**Step 2:** Edit configuration items in `config.py` as needed.
+**Step 2:** Edit configuration items in `config.py` or create a `.env` file, as needed.
 
 **Step 3:** Modify `app.wsgi` file and change paths (if needed).
 
@@ -20,7 +20,7 @@ pipenv --three install
 Edit `/etc/apache2/conf-available/openstack-dashboard.conf` and include the following:
 ```
         WSGIDaemonProcess oscm user=www-data group=www-data processes=3 threads=10 display-name=%{GROUP}
-        WSGIScriptAlias /manage /var/www/openstack-course-manager/panel.wsgi process-group=oscm
+        WSGIScriptAlias /manage /var/www/openstack-course-manager/app.wsgi process-group=oscm
 
         <Directory /var/www/openstack-course-manager>
                 WSGIProcessGroup oscm
@@ -66,7 +66,7 @@ You should probably register this as a system service...
 
 ### Web Assets
 
-This web panel is designed to integrate with the OpenStack Course Manager's API system. All paths are relative, so you should be able to use this on any domain as long as the API endpoint is on the same domain under `/api`.
+This web panel is designed to integrate with the OpenStack Course Manager's API system. All paths are relative, so you should be able to use this on any domain as long as the API endpoint is on the same domain under `/manage/api`.
 
 You can generate static assets by modifying the Jinja2 templates under `www/templates`. Then simply run `staticjinja build` to generate the new assets.
 

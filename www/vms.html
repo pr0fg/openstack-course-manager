@@ -272,7 +272,7 @@
 
   function getSettings() {
       $.ajax({
-        url: "/api/settings",
+        url: "/manage/api/settings",
         method: "GET",
         statusCode: { 401: function() { logout() } }
       })
@@ -292,7 +292,7 @@
     $("#" + id).bootstrapSwitch('disabled', true);
 
     $.ajax({
-      url: "/api/settings",
+      url: "/manage/api/settings",
       method: "PATCH",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(data),

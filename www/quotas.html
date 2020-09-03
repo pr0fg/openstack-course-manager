@@ -343,7 +343,7 @@
   function getQuotas() {
 
     $.ajax({
-      url: "/api/quota",
+      url: "/manage/api/quota",
       method: "GET",
       statusCode: { 401: function() { logout() } }
     })
@@ -381,7 +381,7 @@
     $("#buttonStudentQuotaSave").attr("disabled", true);
 
     $.ajax({
-      url: "/api/quota",
+      url: "/manage/api/quota",
       method: "PATCH",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
@@ -411,7 +411,7 @@
     $("#buttonGroupQuotaSave").attr("disabled", true);
 
     $.ajax({
-      url: "/api/quota",
+      url: "/manage/api/quota",
       method: "PATCH",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({ 
