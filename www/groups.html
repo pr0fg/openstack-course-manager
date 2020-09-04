@@ -404,7 +404,7 @@
             method: "POST",
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({ 
-              username: entries[item].replace(/\n/g, ''),
+              username: entries[item].replace(/\n/g, '').replace(/\r/g, ''),
               group_number: group_id
             }),
             statusCode: { 401: function() { logout() } }
