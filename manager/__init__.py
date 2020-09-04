@@ -1220,7 +1220,7 @@ class OpenStackCourseManager():
             if Config.EMAIL_USERNAME and Config.EMAIL_PASSWORD:
                 server.login(Config.EMAIL_USERNAME, Config.EMAIL_PASSWORD)
 
-            server.sendmail(Config.EMAIL_SENDER, recipient, message.as_string())
+            server.sendmail(Config.EMAIL_SENDER, recipient, message)
             server.quit()
 
         except Exception as e:
