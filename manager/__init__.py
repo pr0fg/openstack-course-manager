@@ -1149,7 +1149,7 @@ class OpenStackCourseManager():
             current_dir, 'templates/email/password_reset_request.template'))
 
         message = file.read().format(
-            course_manager_url=Config.COURSE_MANAGER_URL,
+            cloud_url=Config.CLOUD_URL,
             token=token)
 
         logging.info(f'Sent password reset request email to {user.email}')
