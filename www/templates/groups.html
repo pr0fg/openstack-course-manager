@@ -244,13 +244,12 @@
 
       for (var group in data) {
         for (var student in data[group]) {
-          var group_number = group.split("-")[1];
           var html = `
            <tr>
             <td>${data[group][student].name}</td>
             <td>${data[group][student].email}</td>
             <td>${group}</td>
-            <td><button id='${data[group][student].name}-${group_number}' type='button' class='btn btn-block btn-danger' onClick='return removeFromGroup("${data[group][student].name}", ${group_number});'>Remove</button></td>
+            <td><button id='${data[group][student].name}-${group}' type='button' class='btn btn-block btn-danger' onClick='return removeFromGroup("${data[group][student].name}", ${group});'>Remove</button></td>
            </tr>`;
           $("#tableBody").append(html);
         }
