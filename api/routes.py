@@ -36,7 +36,7 @@ def celery_wrapper(function_name, *args, **kwargs):
 def setup_periodic_tasks(sender, **kwargs):
 
     sender.add_periodic_task(
-        crontab(hour='*', minute='*/3', day_of_week='*'),
+        crontab(hour='*', minute='*/10', day_of_week='*'),
         cron_enforce_acl_policy.s(),
         name='Enforce ACL Policies'
     )
