@@ -3,13 +3,13 @@
 import random
 import string
 
-from flask import request, send_from_directory
+from flask import request, redirect
 from flask_restful import Resource, abort, wraps, reqparse
 from celery.schedules import crontab
 from celery.utils.log import get_task_logger
 from expiring_dict import ExpiringDict
 
-from api import app, api, celery
+from api import api, celery
 from manager import OpenStackCourseManager
 from config import Config
 
@@ -202,14 +202,14 @@ class PasswordResetConfirm(Resource):
     def get(self, token):
 
         if token not in reset_tokens.keys():
-            return parse_result(False)
+            return redirect(Config.CLOUD_URL, code=302)
 
         else:
             course_code = reset_tokens[token][0]
             username = reset_tokens[token][1]
             del reset_tokens[token]
-            return parse_result(
-                manager.set_password(course_code, username))
+            manager.set_password(course_code, username)
+            return redirect(Config.CLOUD_URL, code=302)
 
 
 # -----------------------------------------------------------------------------
