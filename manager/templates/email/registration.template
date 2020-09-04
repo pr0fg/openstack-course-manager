@@ -1,31 +1,32 @@
-Subject: Added to Cloud Course: {course}
-
-Hello,
-
-You have been added to a new course on our private cloud:
-
-
-Course Details:
----------------
-Course:       {course}
-Username:     {username}
-Password:     [See Registration Email]
-Project:      {project}
-
-Cloud URL:    {cloud_url}
-
-
-Connecting to Your VMs:
------------------------
-VPN Type:           OpenVPN
-Credentials:        [Same As Above]
-Client Software:    {vpn_client_url}
-OpenVPN File:       {vpn_file_url}
-Setup Guide:        {vpn_setup_guide}
-
-
-Note: You cannot log into the cloud web portal until your account has been enabled by your instructor! Cloud access is only available during course hours and on weekends (if enabled by your instructor).
-
-Please take a moment to read through the getting started guide located at {vpn_setup_guide}. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN.
-
-If you are having issues connecting to the cloud portal, or if you require additional technical assistance, please contact your instructor or TA.
+<html>
+<body>
+Hello,<br/>
+<br/>
+You have been added to a new course on our private cloud:<br/>
+<br/>
+<strong>Course Details:</strong></br>
+<table>
+<tr><td>Course:</td><td>{course}</td></tr>
+<tr><td>Username:</td><td>{username}</td></tr>
+<tr><td>Password:</td><td>[See Registration Email]</td></tr>
+<tr><td>Project:</td><td>{project}</td></tr>
+<tr></tr>
+<tr><td>Cloud URL:</td><td><a href="{cloud_url}">{cloud_url}</a></td></tr>
+</table>
+<br/>
+<strong>Connecting to Your VMs:</strong><br/>
+<table>
+<tr><td>VPN Type:</td><td>OpenVPN</td></tr>
+<tr><td>Credentials:</td><td>[Same As Above]</td></tr>
+<tr><td>Client Software:</td><td><a href="{vpn_client_url}">{vpn_client_url}</a></td></tr>
+<tr><td>OpenVPN File:</td><td><a href="{vpn_file_url}">{vpn_file_url}</a></td></tr>
+<tr><td>Setup Guide:</td><td><a href="{vpn_setup_guide}">{vpn_setup_guide}</a></td></tr>
+</table>
+<br/>
+<strong>Note:</strong>You cannot log into the cloud web portal until your account has been enabled by your instructor! Cloud access is only available during course hours and on weekends (if enabled by your instructor).<br/>
+<br/>
+Please take a moment to read through the <a href="{vpn_setup_guide}">getting started guide</a>. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN.<br/>
+<br/>
+If you are having issues connecting to the cloud portal, or if you require additional technical assistance, please contact your instructor or TA.<br/>
+</body>
+</html>

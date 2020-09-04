@@ -1,34 +1,35 @@
-Subject: Added to Cloud Course: {course}
-
-Hello,
-
-You have been added to a new course on our private cloud:
-
-
-Course Details:
----------------
-Course:       {course}
-Username:     {username}
-Password:     [See Registration Email]
-Project:      {project}
-
-Cloud URL:       {cloud_url}
-Course Manager:  {course_manager_url}
-
-Note: You can add/remove students from your course, reset passwords, share lab images, etc. using the course manager panel. Please only email the cloud administrator if you are absolutely sure the functionality you require is not built into this web panel!
-
-
-Connecting to Your VMs:
------------------------
-VPN Type:           OpenVPN
-Credentials:        [Same As Above]
-Client Software:    {vpn_client_url}
-OpenVPN File:       {vpn_file_url}
-Setup Guide:        {vpn_setup_guide}
-
-
-Note: Your account is always available 24/7, whereas student accounts are only available during course hours and on weekends (if enabled).
-
-Please take a moment to read through the getting started guide located at {vpn_setup_guide}. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN. Your students will receive the same instructions.
-
-If you are having issues connecting to the cloud portal, or if you require additional technical assistance, please email your cloud administrator.
+<html>
+<body>
+Hello,<br/>
+<br/>
+You have been added to a new course on our private cloud:<br/>
+<br/>
+<strong>Course Details:</strong></br>
+<table>
+<tr><td>Course:</td><td>{course}</td></tr>
+<tr><td>Username:</td><td>{username}</td></tr>
+<tr><td>Password:</td><td>[See Registration Email]</td></tr>
+<tr><td>Project:</td><td>{project}</td></tr>
+<tr></tr>
+<tr><td>Cloud URL:</td><td><a href="{cloud_url}">{cloud_url}</a></td></tr>
+<tr><td>Course Manager:</td><td><a href="{course_manager_url}">{course_manager_url}</a></td></tr>
+</table>
+<br/>
+<strong>Note:</strong> You can add/remove students from your course, reset passwords, share lab images, etc. using the course manager panel. Please only email the cloud administrator if you are absolutely sure the functionality you require is not built into this web panel!<br/>
+<br/>
+<strong>Connecting to Your VMs:</strong><br/>
+<table>
+<tr><td>VPN Type:</td><td>OpenVPN</td></tr>
+<tr><td>Credentials:</td><td>[Same As Above]</td></tr>
+<tr><td>Client Software:</td><td><a href="{vpn_client_url}">{vpn_client_url}</a></td></tr>
+<tr><td>OpenVPN File:</td><td><a href="{vpn_file_url}">{vpn_file_url}</a></td></tr>
+<tr><td>Setup Guide:</td><td><a href="{vpn_setup_guide}">{vpn_setup_guide}</a></td></tr>
+</table>
+<br/>
+<strong>Note:</strong> Your account is always available 24/7, whereas student accounts are only available during course hours and on weekends (if enabled).<br/>
+<br/>
+Please take a moment to read through the <a href="{vpn_setup_guide}">getting started guide</a>. This guide provides additional instructions regarding how to connect to your VM instances remotely using OpenVPN. Your students will receive the same instructions.<br/>
+<br/>
+If you are having issues connecting to the cloud portal, or if you require additional technical assistance, please email your cloud administrator.<br/>
+</body>
+</html>
