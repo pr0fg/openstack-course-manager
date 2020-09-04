@@ -12,6 +12,8 @@ import ssl
 from datetime import time, datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.header import Header
+from email.utils import formataddr
 
 import openstack
 
@@ -1199,7 +1201,8 @@ class OpenStackCourseManager():
 
         message = MIMEMultipart("alternative")
         message["Subject"] = subject
-        message["From"] = Config.EMAIL_SENDER
+        message['From'] = formataddr((str(Header('Cloud Bot', 'utf-8')),
+                                     Config.EMAIL_SENDER))
         message["To"] = recipient
         message.attach(MIMEText(message, "html"))
 
