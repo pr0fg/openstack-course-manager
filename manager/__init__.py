@@ -1199,12 +1199,12 @@ class OpenStackCourseManager():
 
     def _send_email(self, recipient, subject, message):
 
-        message = MIMEMultipart("alternative")
-        message["Subject"] = subject
-        message['From'] = formataddr((str(Header('Cloud Bot', 'utf-8')),
-                                     Config.EMAIL_SENDER))
-        message["To"] = recipient
-        message.attach(MIMEText(message, "html"))
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = subject
+        msg['From'] = formataddr((str(Header('Cloud Bot', 'utf-8')),
+                                 Config.EMAIL_SENDER))
+        msg["To"] = recipient
+        msg.attach(MIMEText(message, "html"))
 
         context = ssl.create_default_context()
 
@@ -1220,7 +1220,7 @@ class OpenStackCourseManager():
             if Config.EMAIL_USERNAME and Config.EMAIL_PASSWORD:
                 server.login(Config.EMAIL_USERNAME, Config.EMAIL_PASSWORD)
 
-            server.sendmail(Config.EMAIL_SENDER, recipient, message.as_string())
+            server.sendmail(Config.EMAIL_SENDER, recipient, msg.as_string())
             server.quit()
 
         except Exception as e:
