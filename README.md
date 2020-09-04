@@ -19,16 +19,26 @@ pipenv --three install
 **Step 4:** Install Apache2 WSGI Directive
 Edit `/etc/apache2/conf-available/openstack-dashboard.conf` and include the following:
 ```
-        WSGIDaemonProcess oscm user=www-data group=www-data processes=3 threads=10 display-name=%{GROUP}
-        WSGIScriptAlias /manage /var/www/openstack-course-manager/app.wsgi process-group=oscm
+WSGIDaemonProcess oscm user=www-data group=www-data processes=1 threads=2 display-name=%{GROUP}
+WSGIScriptAlias /api /var/www/openstack-course-manager/app.wsgi process-group=oscm
 
-        <Directory /var/www/openstack-course-manager>
-                WSGIProcessGroup oscm
-                WSGIApplicationGroup %{GLOBAL}
-                WSGIPassAuthorization On
-                WSGIScriptReloading On
-                Require all granted
-        </Directory>
+<Directory "/var/www/openstack-course-manager">
+    WSGIProcessGroup oscm
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+    WSGIScriptReloading On
+    Require all granted
+</Directory>
+
+Alias /manage /var/www/openstack-course-manager/www
+<Directory "/var/www/openstack-course-manager/www">
+    DirectoryIndex login.html
+    Options -Indexes
+    AllowOverride None
+</Directory>
+<Directory "/var/www/openstack-course-manager/www/templates">
+    Require all denied
+</Directory>
 ```
 
 **Step 5:** Prepare RabbitMQ
@@ -38,7 +48,26 @@ rabbitmqctl add_user oscm password
 rabbitmqctl set_permissions -p oscm oscm ".*" ".*" ".*"
 ```
 
-**Step 6:** Finalize Installation
+**Step 6:** Register Celery Worker Under systemd
+Edit `/etc/systemd/system/oscm.service` with the following:
+```
+[Unit]
+Description=OpenStack Course Manager Celery Service
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/openstack-course-manager
+ExecStart=/var/www/openstack-course-manager/.venv/bin/celery worker -A api.celery -B -s /var/www/openstack-course-manager/.celerybeat-schedule --loglevel=info
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+Reload systemd and start the service by doing `systemctl daemon-reload` then `systemctl start oscm`.
+
+**Step 7:** Finalize Installation
 ```
 chown -R www-data:www-data /var/www/openstack-course-manager
 systemctl restart apache2
