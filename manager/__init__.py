@@ -1142,7 +1142,7 @@ class OpenStackCourseManager():
         user = kwargs.get('user')
 
         file = open(os.path.join(
-            current_dir, 'manager/templates/email/password_reset_request.template'))
+            current_dir, 'templates/email/password_reset_request.template'))
 
         message = file.read().format(
             course_manager_url=Config.COURSE_MANAGER_URL,
@@ -1157,7 +1157,7 @@ class OpenStackCourseManager():
     def _send_password_reset_email(self, user, plaintext_password):
 
         file = open(os.path.join(
-            current_dir, 'manager/templates/email/password_reset.template'))
+            current_dir, 'templates/email/password_reset.template'))
 
         message = file.read().format(
             username=user.name,
@@ -1172,10 +1172,10 @@ class OpenStackCourseManager():
 
         if instructor:
             file = open(os.path.join(
-                current_dir, 'manager/templates/email/instructor.template'))
+                current_dir, 'templates/email/instructor.template'))
         else:
             file = open(os.path.join(
-                current_dir, 'manager/templates/email/registration.template'))
+                current_dir, 'templates/email/registration.template'))
 
         message = file.read().format(
             course=course_code,
