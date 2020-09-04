@@ -10,6 +10,8 @@ import logging
 import smtplib
 import ssl
 from datetime import time, datetime
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 import openstack
 
@@ -1149,7 +1151,7 @@ class OpenStackCourseManager():
             token=token)
 
         logging.info(f'Sent password reset request email to {user.email}')
-        self._send_email(user.email, message)
+        self._send_email(user.email, 'Password Reset Request', message)
 
     # ------------------------------------------------------------------------
     # Internal Email Functions
@@ -1165,7 +1167,7 @@ class OpenStackCourseManager():
             cloud_url=Config.CLOUD_URL)
 
         logging.info(f'Sent password reset email to {user.email}')
-        self._send_email(user.email, message)
+        self._send_email(user.email, 'Private Cloud Account Details', message)
 
     def _send_course_enroll_email(self, course_code, user, project_name,
                                   instructor=False):
@@ -1190,9 +1192,16 @@ class OpenStackCourseManager():
         logging.info(f'{course_code}: Sending course enroll email to \
             {user.email}')
 
-        self._send_email(user.email, message)
+        self._send_email(user.email, f'Added to Cloud Course: {course_code}',
+                         message)
 
-    def _send_email(self, recipient, message):
+    def _send_email(self, recipient, subject, message):
+
+        message = MIMEMultipart("alternative")
+        message["Subject"] = subject
+        message["From"] = Config.EMAIL_SENDER
+        message["To"] = recipient
+        message.attach(MIMEText(message, "html"))
 
         context = ssl.create_default_context()
 
@@ -1208,7 +1217,7 @@ class OpenStackCourseManager():
             if Config.EMAIL_USERNAME and Config.EMAIL_PASSWORD:
                 server.login(Config.EMAIL_USERNAME, Config.EMAIL_PASSWORD)
 
-            server.sendmail(Config.EMAIL_SENDER, recipient, message)
+            server.sendmail(Config.EMAIL_SENDER, recipient, message.as_string())
             server.quit()
 
         except Exception as e:
