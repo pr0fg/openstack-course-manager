@@ -535,6 +535,8 @@ class OpenStackCourseManager():
                 return False
 
         course_settings = self.get_settings(course_code)
+        weekend = True if (int(datetime.now().strftime('%w'))-1) >= 5 \
+            else False
 
         if students:
 
@@ -544,7 +546,7 @@ class OpenStackCourseManager():
                     if not project.is_enabled:
                         self._cloud.identity.update_project(project,
                                                             enabled=True)
-                if course_settings['keep']:
+                if not weekend and course_settings['keep']:
                     self._unshelve_vms(course_code, students=True)
 
             else:
