@@ -62,53 +62,60 @@
       </div>
       <div class="card-body">
 
-        <div class="col-3">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Day</span>
-            </div>
-            <select class="form-control" id="formSectionDay">
-              <option value="0">Monday</option>
-              <option value="1">Tuesday</option>
-              <option value="2">Wednesday</option>
-              <option value="3">Thursday</option>
-              <option value="4">Friday</option>
-            </select>
-          </div>
-        </div>
+        <div class="row">
 
-        <div class="col-4">
-          <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Start</span>
+            <div class="col-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Day</span>
+                </div>
+                <select class="form-control" id="formSectionDay">
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3">Thursday</option>
+                  <option value="4">Friday</option>
+                </select>
+              </div>
             </div>
-            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerStart"/>
-            <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-clock"></i></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-4">
-          <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
-            <div class="input-group-prepend">
-              <span class="input-group-text">End</span>
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Start</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerStart"/>
+                <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
             </div>
-            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerEnd"/>
-            <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">End</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerEnd"/>
+                <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-1">
-          <button type="button" id="buttonAdd" class="btn btn-block btn-primary"><i class="fa fa-plus"></i></button>
-        </div>
+            <div class="col-1">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary"><i class="fa fa-plus"></i></button>
+            </div>
 
+        </div>
       </div>
+      <!-- /.card-body -->
     </div>
+    <!-- /.card -->
+
   </div>
 </div>
+<!-- /.row -->
 {% endblock %}
 
 {% block externaljs %}
