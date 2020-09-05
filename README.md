@@ -67,7 +67,14 @@ WantedBy=multi-user.target
 ```
 Reload systemd and start the service by doing `systemctl daemon-reload` then `systemctl start oscm`.
 
-**Step 7:** Finalize Installation
+
+**Step 7:** Integrate Password Reset with OpenStack Horizon
+To integrate the password reset functionality with OpenStack horizon's login page, copy `openstack_dashboard/templates/_login_footer.html` to your OpenStack horizon template folder (likely `/usr/share/openstack-dashboard/openstack_dashboard/templates/`). 
+
+Restart `apache2` and `memcached` to push through the change. You should see the password reset button show up on the login page.
+
+
+**Step 8:** Finalize Installation
 ```
 chown -R www-data:www-data /var/www/openstack-course-manager
 systemctl restart apache2
