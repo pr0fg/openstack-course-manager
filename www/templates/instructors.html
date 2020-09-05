@@ -12,7 +12,6 @@
 {% block content %}
 <div class="row">
   <div class="col-12">
-
     <div class="card">
       <div class="card-body">
         <table id="table" class="table table-bordered table-striped">
@@ -30,6 +29,11 @@
       <!-- /.card-body -->
     </div>
     <!-- /.card -->
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
 
     <div class="card card-info">
       <div class="card-header">
@@ -37,31 +41,22 @@
       </div>
       <div class="card-body">
 
-        <div class="row">
-
-            <div class="col-6">
-              <div class="input-group mb-3">
-                <input type="text" id="formEmail" class="form-control" placeholder="Email">
-                <div class="input-group-append">
-                  <span class="input-group-text">@ontariotechu.ca</span>
-                </div>
-              </div>
+        <div class="col-8">
+          <div class="input-group mb-3">
+            <input type="text" id="formEmail" class="form-control" placeholder="Email">
+            <div class="input-group-append">
+              <span class="input-group-text">@ontariotechu.ca</span>
             </div>
-
-            <div class="col-2">
-              <button type="button" id="buttonAdd" class="btn btn-block btn-primary">Add</button>
-            </div>
-
+          </div>
         </div>
 
-      <!-- /.card-body -->
-    </div>
-    <!-- /.card -->
+        <div class="col-4">
+          <button type="button" id="buttonAdd" class="btn btn-block btn-primary">Add</button>
+        </div>
 
+    </div>
   </div>
-  <!-- /.col -->
 </div>
-<!-- /.row -->
 {% endblock %}
 
 {% block externaljs %}
