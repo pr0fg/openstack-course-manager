@@ -180,15 +180,12 @@
       
 <div class="row">
   <div class="col-12">
+
     <div class="callout callout-warning">
       <h5>Buffer Time</h5>
       <p>We recommend you include a buffer time of <strong>10 minutes</strong> before and after your class to account for the time it takes to unlock accounts, unshelve VMs, etc.</p>
     </div>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col-12">
     <div class="card card-default">
       <div class="card-header">
         <h3 class="card-title"><i class="fas fa-user-clock mr-2"></i>Weekend Access to Cloud & Course Images</h3>
@@ -197,11 +194,8 @@
         <input id="weekend" type="checkbox" class="switcher" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
       </div>
     </div>
-  </div>
-</div>
+    <!-- /.card -->
 
-<div class="row">
-  <div class="col-12">
     <div class="card">
       <div class="card-body table-responsive p-0">
         <table class="table table-hover text-nowrap">
@@ -216,65 +210,70 @@
           <tbody id="tableBody"></tbody>
         </table>
       </div>
+      <!-- /.card-body -->
     </div>
-  </div>
-</div>
+    <!-- /.card -->
 
-<div class="row">
-  <div class="col-12">
     <div class="card card-info">
       <div class="card-header">
         <h3 class="card-title"><i class="fas fa-calendar-plus mr-2"></i>Add Section</h3>
       </div>
       <div class="card-body">
 
-        <div class="col-3">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Day</span>
-            </div>
-            <select class="form-control" id="formSectionDay">
-              <option value="0">Monday</option>
-              <option value="1">Tuesday</option>
-              <option value="2">Wednesday</option>
-              <option value="3">Thursday</option>
-              <option value="4">Friday</option>
-            </select>
-          </div>
-        </div>
+        <div class="row">
 
-        <div class="col-4">
-          <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Start</span>
+            <div class="col-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Day</span>
+                </div>
+                <select class="form-control" id="formSectionDay">
+                  <option value="0">Monday</option>
+                  <option value="1">Tuesday</option>
+                  <option value="2">Wednesday</option>
+                  <option value="3">Thursday</option>
+                  <option value="4">Friday</option>
+                </select>
+              </div>
             </div>
-            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerStart"/>
-            <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-clock"></i></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-4">
-          <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
-            <div class="input-group-prepend">
-              <span class="input-group-text">End</span>
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerStart" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Start</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerStart"/>
+                <div class="input-group-append" data-target="#datetimepickerStart" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
             </div>
-            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerEnd"/>
-            <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
-                <div class="input-group-text"><i class="fa fa-clock"></i></div>
+
+            <div class="col-4">
+              <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">End</span>
+                </div>
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepickerEnd"/>
+                <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="col-1">
-          <button type="button" id="buttonAdd" class="btn btn-block btn-primary"><i class="fa fa-plus"></i></button>
-        </div>
+            <div class="col-1">
+              <button type="button" id="buttonAdd" class="btn btn-block btn-primary"><i class="fa fa-plus"></i></button>
+            </div>
 
+        </div>
       </div>
+      <!-- /.card-body -->
     </div>
+    <!-- /.card -->
+
   </div>
 </div>
+<!-- /.row -->
 
 
       </div><!-- /.container-fluid -->
