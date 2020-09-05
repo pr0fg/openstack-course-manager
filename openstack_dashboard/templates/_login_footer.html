@@ -1,0 +1,51 @@
+<script>
+
+$('.panel-footer').html(`
+    <button id="loginBtn" type="submit" class="btn btn-primary pull-right">
+        <span>Sign In</span>
+    </button>
+    <button id="resetBtn" type="button" class="btn btn-warning pull-left">
+        <span>Reset Password</span>
+    </button>
+    <div class="clearfix"></div>
+`)
+
+$("#resetBtn").click(function(){
+
+    if($('.alert-danger').length == 0) {
+        $('<div class="alert alert-danger" style="display: block;"></div>').insertAfter("#id_region")
+    }
+    if($('.alert-success').length == 0) {
+        $('<div class="alert alert-success" style="display: block;"></div>').insertAfter("#id_region")
+    }
+
+    $(".form-group").last().hide()
+
+    if($('#id_course').length == 0) {
+        $(`<label class="control-label" for="id_course"><span class="field-label">Course Code</span></label><div class="form-group"><input type="text" autofocus="autofocus" class="form-control" placeholder="INFR-1234" id="id_course" autocomplete="off"></div>`).insertAfter($(".form-group").last())
+    }
+
+    var username = $("#id_username").val()
+    var course_code = $("#id_course").val()
+
+    if(!username || !course_code) {
+        $('.alert-success').hide()
+        $('.alert-danger').html('<p>Please enter your username and course code to reset your password.</p>')
+        $('.alert-danger').show()
+    }
+    else {
+
+        $('.alert-danger').hide()
+        $('.alert-success').html('<p>Password reset request sent. Please check your email.</p>')
+        $('.alert-success').show()
+        $('.form-group').hide()
+        $('.control-label').hide()
+        $('.panel-footer').hide()
+
+        $.ajax({
+          type: 'GET',
+          url: '/api/public/reset/' + course_code + '/' + username
+        })
+    }
+})
+</script>
