@@ -19,7 +19,7 @@ pipenv --three install
 **Step 4:** Install Apache2 WSGI Directive
 Edit `/etc/apache2/conf-available/openstack-dashboard.conf` and include the following:
 ```
-WSGIDaemonProcess oscm user=www-data group=www-data processes=1 threads=2 display-name=%{GROUP}
+WSGIDaemonProcess oscm user=www-data group=www-data processes=3 threads=1 display-name=%{GROUP}
 WSGIScriptAlias /api /var/www/openstack-course-manager/app.wsgi process-group=oscm
 
 <Directory "/var/www/openstack-course-manager">
