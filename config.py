@@ -26,6 +26,10 @@ class Config(object):
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
     CELERY_BACKEND_URL = os.getenv('CELERY_BACKEND_URL')
 
+    # Memcached for API tokens
+    MEMCACHED_HOST = os.getenv('MEMCACHED_HOST')
+    MEMCACHED_PORT = int(os.getenv('MEMCACHED_PORT'))
+
     # General Settings
     TIMEZONE = 'America/Toronto'
     SESSION_TIMEOUT = 3600

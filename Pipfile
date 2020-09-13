@@ -12,8 +12,8 @@ python-dotenv = "*"
 flask = "*"
 flask-restful = "*"
 celery = "*"
-expiring-dict = "*"
 staticjinja = "*"
+pymemcache = "*"
 
 [requires]
 python_version = "3.8"

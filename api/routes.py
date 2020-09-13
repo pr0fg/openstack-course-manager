@@ -2,20 +2,20 @@
 
 import random
 import string
+import json
 
 from flask import request, redirect
 from flask_restful import Resource, abort, wraps, reqparse
 from celery.schedules import crontab
 from celery.utils.log import get_task_logger
-from expiring_dict import ExpiringDict
+from pymemcache.client import base
 
 from api import api, celery
 from manager import OpenStackCourseManager
 from config import Config
 
 manager = OpenStackCourseManager(debug=Config.DEBUG)
-sessions = ExpiringDict(Config.SESSION_TIMEOUT)
-reset_tokens = ExpiringDict(Config.SESSION_TIMEOUT)
+memcached = base.Client((Config.MEMCACHED_HOST, Config.MEMCACHED_PORT))
 logger = get_task_logger(__name__)
 
 
@@ -95,9 +95,10 @@ def requires_token(func):
     def decorated(*args, **kwargs):
 
         token = request.cookies.get('oscm')
-        course_code = verify_token(token)
 
-        if not course_code:
+        try:
+            course_code = str(memcached.get(token), 'utf-8')
+        except TypeError:
             abort(401, message='Invalid token')
 
         return func(*args, **kwargs, course_code=course_code, token=token)
@@ -120,28 +121,12 @@ def task_queued():
 
 
 # -----------------------------------------------------------------------------
-# Authentication Methods
+# Token Generation Function
 
-def get_token(course_code=None):
-    token = ''.join(random.choice(
+def generate_token(course_code=None):
+    return ''.join(random.choice(
         string.ascii_uppercase + string.ascii_lowercase + string.digits)
         for _ in range(64))
-    if course_code:
-        sessions[token] = course_code
-    return token
-
-
-def verify_token(token):
-    if token in sessions.keys():
-        return sessions[token]
-    else:
-        return False
-
-
-def revoke_token(token):
-    sessions.pop(token, None)
-    return True
-
 
 # -----------------------------------------------------------------------------
 # Public API Views
@@ -170,9 +155,14 @@ class Login(Resource):
                                       password=args['password'])
 
         if login_success:
+
+            token = generate_token()
+            memcached.add(token, args['course_code'],
+                          expire=Config.SESSION_TIMEOUT)
+
             return {'token': {
                 'name': 'oscm',
-                'value': get_token(args['course_code']),
+                'value': token,
                 'expires': Config.SESSION_TIMEOUT}
             }
         else:
@@ -189,8 +179,10 @@ class PasswordResetRequest(Resource):
                 username in course_users['instructors'] or
                 username in course_users['students']):
 
-            token = get_token()
-            reset_tokens[token] = [course_code, username]
+            token = generate_token()
+            memcached.add(token,
+                          json.dumps([course_code, username]),
+                          expire=Config.SESSION_TIMEOUT)
             manager.send_password_reset_request_email(
                 course_code, username, token)
 
@@ -201,15 +193,14 @@ class PasswordResetConfirm(Resource):
 
     def get(self, token):
 
-        if token not in reset_tokens.keys():
-            return redirect(Config.CLOUD_URL, code=302)
+        try:
+            token_values = json.loads(memcached.get(token))
+            manager.set_password(token_values[0], token_values[1])
+            memcached.delete(token)
+        except TypeError:
+            pass
 
-        else:
-            course_code = reset_tokens[token][0]
-            username = reset_tokens[token][1]
-            del reset_tokens[token]
-            manager.set_password(course_code, username)
-            return redirect(Config.CLOUD_URL, code=302)
+        return redirect(Config.CLOUD_URL, code=302)
 
 
 # -----------------------------------------------------------------------------
@@ -219,7 +210,8 @@ class Logout(Resource):
 
     @requires_token
     def get(self, **kwargs):
-        return parse_result(revoke_token(kwargs.get('token')))
+        return parse_result(
+            memcached.delete(kwargs.get('token')))
 
 
 class PasswordReset(Resource):
