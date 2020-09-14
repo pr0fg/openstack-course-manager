@@ -76,7 +76,7 @@
 
     $("#buttonAdd").click(function(){
 
-      var email = $("#formEmail").val().match(/^[a-z0-9\-\.]{3,}$/g)[0]
+      var email = $("#formEmail").val().toLowerCase().match(/^[a-z0-9\-\.]{3,}$/g)[0]
       if(!email) {
         toastr.error("Invalid email address!", "Error")
       }

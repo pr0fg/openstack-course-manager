@@ -145,7 +145,7 @@
     $("#buttonAdd").click(function(){
 
       var id = $("#formId").val();
-      var email = $("#formEmail").val().match(/^[a-z0-9\-\.]{3,}$/g);;
+      var email = $("#formEmail").val().toLowerCase().match(/^[a-z0-9\-\.]{3,}$/g)[0];
 
       if(!id || id < 100000000 || id > 100999999) {
         toastr.error("Invalid student ID!", "Error")
