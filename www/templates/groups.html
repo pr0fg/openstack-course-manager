@@ -148,6 +148,8 @@
 
   $(function () {
 
+    $("#table").LoadingOverlay("show");
+
     getGroups();
     setTimeout(getGroups, 10000)
 
@@ -254,6 +256,8 @@
           $("#tableBody").append(html);
         }
       }
+
+      $("#table").LoadingOverlay("hide");
     })
     .fail(function(xhr, statusText) {
       toastr.error("Could not retrieve student list.", "Error (" + xhr.status + ")")

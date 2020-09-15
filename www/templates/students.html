@@ -139,8 +139,10 @@
 
   $(function () {
 
+    $("#table").LoadingOverlay("show");
+
     getStudents();
-    setTimeout(getStudents, 10000)
+    setTimeout(getStudents, 30000)
 
     $("#buttonAdd").click(function(){
 
@@ -261,6 +263,7 @@
          </tr>`;
         $("#tableBody").append(html);
       }
+      $("#table").LoadingOverlay("hide");
     })
     .fail(function(xhr, statusText) {
       toastr.error("Could not retrieve student list.", "Error (" + xhr.status + ")")
