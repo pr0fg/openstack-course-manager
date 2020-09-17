@@ -13,8 +13,12 @@ class Config(object):
 
     # Global Configs
     DEBUG = True
-    DISABLE_STUDENT_VM_SAVE = False
-    DISABLE_STUDENT_SNAPSHOT = False
+    DISABLE_STUDENT_VM_SAVE = \
+        True if os.getenv('DISABLE_STUDENT_VM_SAVE') == '1' \
+        else False
+    DISABLE_STUDENT_SNAPSHOT = \
+        True if os.getenv('DISABLE_STUDENT_SNAPSHOT') == '1' \
+        else False
 
     # OpenStack Additional Requirements
     OS_DOMAIN_ID = os.getenv('OS_DOMAIN_ID')
