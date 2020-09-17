@@ -16,8 +16,8 @@ class Config(object):
     DISABLE_STUDENT_VM_SAVE = \
         True if os.getenv('DISABLE_STUDENT_VM_SAVE') == '1' \
         else False
-    DISABLE_STUDENT_SNAPSHOT = \
-        True if os.getenv('DISABLE_STUDENT_SNAPSHOT') == '1' \
+    DISABLE_STUDENT_SNAPSHOTS = \
+        True if os.getenv('DISABLE_STUDENT_SNAPSHOTS') == '1' \
         else False
 
     # OpenStack Additional Requirements

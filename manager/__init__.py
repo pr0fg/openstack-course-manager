@@ -474,7 +474,7 @@ class OpenStackCourseManager():
                             Config.DISABLE_STUDENT_VM_SAVE:
                         pass
                     elif setting == 'snapshots' and \
-                            Config.DISABLE_STUDENT_VM_SAVE:
+                            Config.DISABLE_STUDENT_SNAPSHOTS:
                         pass
                     else:
                         course_settings[setting] = setting_value
