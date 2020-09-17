@@ -469,7 +469,15 @@ class OpenStackCourseManager():
                                     = quota_value
 
                 if setting not in ['schedule', 'quota']:
-                    course_settings[setting] = setting_value
+
+                    if setting == 'keep' and \
+                            Config.DISABLE_STUDENT_VM_SAVE:
+                        pass
+                    elif setting == 'snapshots' and \
+                            Config.DISABLE_STUDENT_VM_SAVE:
+                        pass
+                    else:
+                        course_settings[setting] = setting_value
 
         try:
 

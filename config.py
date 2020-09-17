@@ -11,7 +11,10 @@ load_dotenv(dotenv_path)
 
 class Config(object):
 
+    # Global Configs
     DEBUG = True
+    DISABLE_STUDENT_VM_SAVE = False
+    DISABLE_STUDENT_SNAPSHOT = False
 
     # OpenStack Additional Requirements
     OS_DOMAIN_ID = os.getenv('OS_DOMAIN_ID')
