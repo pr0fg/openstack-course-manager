@@ -363,8 +363,7 @@
 
       var file = document.getElementById('CSVInputFile').files[0];
 
-      console.log(file.type)
-      if(file.type != 'text/csv') {
+      if(file.type != 'text/csv' && file.type !='application/vnd.ms-excel') {
         toastr.error("Please upload a valid CSV file!", "Error")
         $("#buttonUpload").attr("disabled", true);
       }
