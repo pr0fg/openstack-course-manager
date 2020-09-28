@@ -597,7 +597,7 @@ class OpenStackCourseManager():
 
         self._cloud.set_network_quotas(
             name_or_id=project.id,
-            network=quota['network'])
+            network=quota['networks'])
 
         logging.info(f'{course_code}: Updated quota for {project.name}')
 
