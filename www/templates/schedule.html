@@ -156,7 +156,7 @@
       if( startTime.isValid() && endTime.isValid() ) {
 
         if ( durationHours < 1 ) {
-          toastr.error("Courses must be between 1 and 3 hours in duration.", "Error");
+          toastr.error("Courses must be at least 1 hour in duration.", "Error");
         }
         else {
           addToSchedule(
