@@ -41,7 +41,7 @@ class OpenStackCourseManager():
     # ------------------------------------------------------------------------
     @property
     def courses(self):
-        return ['-'.join(project.name.split('-')[0:2])
+        return [project.name.rsplit('-', 1)[0]
                 for project in self._cloud.identity.projects()
                 if 'Instructors' in project.name]
 
