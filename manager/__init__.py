@@ -1140,9 +1140,6 @@ class OpenStackCourseManager():
                 if start_time <= datetime.now().time() <= end_time:
                     logging.debug(f'{course_code}: Course currently scheduled')
                     return True
-                else:
-                    logging.debug(f'{course_code}: Course not scheduled')
-                    return False
 
         return False
 
