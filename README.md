@@ -59,7 +59,7 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=/var/www/openstack-course-manager
-ExecStart=/var/www/openstack-course-manager/.venv/bin/celery worker -A api.celery -B -s /var/www/openstack-course-manager/.celerybeat-schedule --loglevel=info
+ExecStart=/var/www/openstack-course-manager/.venv/bin/celery worker -A api.celery -B -s /var/www/openstack-course-manager/.celerybeat-schedule --loglevel=info --logfile=/var/log/oscm.log
 Restart=always
 
 [Install]
