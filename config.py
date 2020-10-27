@@ -13,6 +13,7 @@ class Config(object):
 
     # Global Configs
     DEBUG = True
+    LOG_FILE = '/var/log/oscm.log'
     DISABLE_STUDENT_VM_SAVE = \
         True if os.getenv('DISABLE_STUDENT_VM_SAVE') == '1' \
         else False

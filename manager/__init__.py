@@ -28,7 +28,8 @@ class OpenStackCourseManager():
 
         logging.basicConfig(level=logging.DEBUG if (debug or Config.DEBUG)
                             else logging.INFO,
-                            format=f'%(levelname)s: %(message)s')
+                            format=f'%(levelname)s: %(message)s',
+                            filename=Config.LOG_FILE)
 
         openstack.enable_logging(
             debug=True if bool(os.getenv('OS_DEBUG')) else False)
