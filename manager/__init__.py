@@ -889,7 +889,7 @@ class OpenStackCourseManager():
             )
 
             scoped = self._cloud.connect_as_project(project.name)
-            result = scoped.delete_server(server.name, delete_ips=True,
+            result = scoped.delete_server(server.id, delete_ips=True,
                                           wait=True)
 
             if result:
