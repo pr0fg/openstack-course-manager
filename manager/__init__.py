@@ -571,14 +571,15 @@ class OpenStackCourseManager():
                                                             enabled=False)
 
         if groups:
+            pass
 
-            if not enabled:
-                self._shelve_vms(course_code, groups=True)
-
-            for project in self._get_group_projects(course_code):
-                if not project.is_enabled == enabled:
-                    self._cloud.identity.update_project(
-                        project, enabled=enabled)
+#            if not enabled:
+#                self._shelve_vms(course_code, groups=True)
+#
+#            for project in self._get_group_projects(course_code):
+#                if not project.is_enabled == enabled:
+#                    self._cloud.identity.update_project(
+#                        project, enabled=enabled)
 
         logging.debug(f'{course_code}: Updated project access for {course_code}:\
                      {enabled}')
